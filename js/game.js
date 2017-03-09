@@ -267,6 +267,16 @@ SideScroller.Game.prototype = {
 			b.kill();
 		}, null, this);
 
+		this.game.physics.arcade.overlap(this.weapon.bullets, this.sweeper, function(a, b){
+			b.kill();
+		}, null, this);
+
+		this.shooterEnemies.children.forEach(function(e){
+			this.game.physics.arcade.overlap(this.sweeper, e.weapon.bullets, function(a, b){
+				b.kill();
+			}, null, this);
+		}, this);
+
 		this.player.body.velocity.x = 0;
 
 		if (this.cursors.left.isDown) {
