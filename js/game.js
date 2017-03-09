@@ -144,12 +144,16 @@ SideScroller.Game.prototype = {
 		/////////////////////// BLOCKERS ////////////////////////////////
 
 		this.cameraBlock = this.game.add.sprite(-10, 0, null);
-		this.game.physics.enable(this.cameraBlock, Phaser.Physics.ARCADE);
+		this.game.physics.arcade.enable(this.cameraBlock);
 		this.cameraBlock.body.setSize(10, this.game.camera.height);
 		this.cameraBlock.body.immovable = true;
 		this.cameraBlock.fixedToCamera = true;
 
-		
+		this.sweeper = this.game.add.sprite(-100, 0, null);
+		this.game.physics.arcade.enable(this.sweeper);
+		this.sweeper.body.setSize(50, this.game.camera.height);
+		this.sweeper.body.immovable = true;
+		this.sweeper.fixedToCamera = true;
 
 		///////////////////// END OF BLOCKERS /////////////////////////////
 
@@ -254,6 +258,14 @@ SideScroller.Game.prototype = {
 			this.player.revive();
 		}.bind(this));
 
+		this.game.physics.arcade.overlap(this.shooterEnemies, this.sweeper, function(a, b){
+			b.weapon.destroy();
+			b.destroy();
+		}, null, this);
+
+		this.game.physics.arcade.overlap(this.walkingEnemies, this.sweeper, function(a, b){
+			b.kill();
+		}, null, this);
 
 		this.player.body.velocity.x = 0;
 
