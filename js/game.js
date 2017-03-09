@@ -199,7 +199,9 @@ SideScroller.Game.prototype = {
 
 	update: function() {
 		this.shooterEnemies.children.forEach(function(e){
-			e.weapon.fireAtSprite(this.player);
+			if (Phaser.Math.distance(this.player.x, 0, e.x, 0) < this.game.camera.width) {
+				e.weapon.fireAtSprite(this.player);
+			}
 		}, this);
 
 		this.game.physics.arcade.collide(this.player, this.cameraBlock);
