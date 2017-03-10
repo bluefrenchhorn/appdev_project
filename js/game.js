@@ -152,6 +152,12 @@ SideScroller.Game.prototype = {
 		this.sweeper.body.immovable = true;
 		this.sweeper.fixedToCamera = true;
 
+		this.bulletBlock = this.game.add.sprite(this.game.camera.width, 0, null);
+		this.game.physics.arcade.enable(this.bulletBlock);
+		this.bulletBlock.body.setSize(50, this.game.camera.height);
+		this.bulletBlock.body.immovable = true;
+		this.bulletBlock.fixedToCamera = true;
+
 		///////////////////// END OF BLOCKERS /////////////////////////////
 
 		this.shooterEnemies = this.game.add.group();
@@ -233,6 +239,10 @@ SideScroller.Game.prototype = {
 			console.log("we have a winner!!!");
 		}
 		
+		this.game.physics.arcade.overlap(this.bulletBlock, this.weapon.bullets, function(a, b){
+			b.kill();
+		}, null, this);
+
 		this.game.physics.arcade.overlap(this.player, this.walkingEnemies, function(a, b) {
 			this.player.kill();
 			this.player.reset(this.player.x, 0);
