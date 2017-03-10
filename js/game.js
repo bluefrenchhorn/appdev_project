@@ -21,7 +21,6 @@ SideScroller.Game.prototype = {
 		this.platformsMid = this.map.createLayer('platformsMid');
 		this.platformsLow = this.map.createLayer('platformsLow');
 		
-
 		this.map.setCollisionBetween(1, 3, true, 'platformsLow');
 		this.map.setCollision(9, true, 'platformsLow');
 		this.map.setCollision(11, true, 'platformsLow');
@@ -41,8 +40,6 @@ SideScroller.Game.prototype = {
 	        left: false,
 	        right: false
 	    });
-
-	    
 
 		this.background.resizeWorld();
 
@@ -111,30 +108,11 @@ SideScroller.Game.prototype = {
 		}.bind(this), 2000);
 
 		/////////////////////////////End of Object layer stuff////////////////////////////////////
-
-		this.player = this.game.add.sprite(100, 300, 'player');
-		this.player.animations.add('standright', ["standright"], 5, true);
-		this.player.animations.add('standleft', ["standleft"], 5, true);
-		this.player.animations.add('duckleft', ["duckleft1"], 5, true);
-		this.player.animations.add('duckright', ["duckright4"], 5, true);
-		this.player.animations.add('jumpleft', ["sprite45"], 5, true);
-		this.player.animations.add('jumpright', ["sprite44"], 5, true);
-		this.player.animations.add('left', Phaser.Animation.generateFrameNames('left', 1, 11), 5, true);
-		this.player.animations.add('right', Phaser.Animation.generateFrameNames('right', 1, 11), 5, true);
-		this.player.animations.play('standright');
-
+		
+		this.player = new SideScroller.Player(this.game, 100, 300);
 
 		this.water = this.map.createLayer('liquid');
 
-		this.weapon = this.game.add.weapon(50, 'bullet');
-		this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-		this.weapon.bulletSpeed = 600;
-		this.weapon.fireRate = 100;
-		this.weapon.trackSprite(this.player, this.player.width/2, this.player.height/2);
-
-		this.game.physics.arcade.enable(this.player);
-		this.player.body.gravity.y = 1500;
-		this.player.body.collideWorldBounds = true;
 		this.game.camera.follow(this.player, null);
 		this.game.camera.deadzone = new Phaser.Rectangle(0, 0, this.game.camera.width/2, this.game.camera.height);
 
@@ -186,19 +164,10 @@ SideScroller.Game.prototype = {
 			e.weapon.trackSprite(e);
 		}, this);
 
-		this.cursors = this.game.input.keyboard.addKeys({
-			'up': Phaser.KeyCode.W,
-			'down': Phaser.KeyCode.S,
-			'left': Phaser.KeyCode.A,
-			'right': Phaser.KeyCode.D,
-			'jump': Phaser.KeyCode.J,
-			'shoot': Phaser.KeyCode.K
-		});
-
 		this.collideMid = true;
 	    this.map.setTileIndexCallback(2, function(sprite) { 
 	    	if (this.collideMid == false && sprite == this.player) return false;
-	    	if (this.cursors.down.isDown && this.cursors.jump.isDown && sprite == this.player) {          
+	    	if (this.player.cursors.down.isDown && this.player.cursors.jump.isDown && sprite == this.player) {          
 	     		this.collideMid = false;
 	     		setTimeout(function(){
 	     			this.collideMid = true;
@@ -211,7 +180,7 @@ SideScroller.Game.prototype = {
 	    this.collideHigh = true;
 	    this.map.setTileIndexCallback(2, function(sprite) { 
 	    	if (this.collideHigh == false && sprite == this.player) return false;
-	    	if (this.cursors.down.isDown && this.cursors.jump.isDown && sprite == this.player) {        
+	    	if (this.player.cursors.down.isDown && this.player.cursors.jump.isDown && sprite == this.player) {        
 	     		this.collideHigh = false;
 	     		setTimeout(function(){
 	     			this.collideHigh = true;
@@ -222,10 +191,6 @@ SideScroller.Game.prototype = {
 	     	return true;           
 	     }, this, this.platformsHigh);
 	},
-
-	direction: "right",
-
-	unlockedFire: true,
 
 	update: function() {
 		this.shooterEnemies.children.forEach(function(e){
@@ -239,7 +204,7 @@ SideScroller.Game.prototype = {
 			console.log("we have a winner!!!");
 		}
 		
-		this.game.physics.arcade.overlap(this.bulletBlock, this.weapon.bullets, function(a, b){
+		this.game.physics.arcade.overlap(this.bulletBlock, this.player.weapon.bullets, function(a, b){
 			b.kill();
 		}, null, this);
 
@@ -250,13 +215,13 @@ SideScroller.Game.prototype = {
 			this.player.revive();
 		}, null, this);
 
-		this.game.physics.arcade.overlap(this.weapon.bullets, this.walkingEnemies, function(a, b) {
+		this.game.physics.arcade.overlap(this.player.weapon.bullets, this.walkingEnemies, function(a, b) {
 			a.kill();
 			b.kill();
 			b.body.velocity.x = 0;
 		}, null, this);
 
-		this.game.physics.arcade.overlap(this.weapon.bullets, this.shooterEnemies, function(a, b) {
+		this.game.physics.arcade.overlap(this.player.weapon.bullets, this.shooterEnemies, function(a, b) {
 			a.kill();
 			b.destroy();
 			b.weapon.destroy();
@@ -303,7 +268,7 @@ SideScroller.Game.prototype = {
 			b.kill();
 		}, null, this);
 
-		this.game.physics.arcade.overlap(this.weapon.bullets, this.sweeper, function(a, b){
+		this.game.physics.arcade.overlap(this.player.weapon.bullets, this.sweeper, function(a, b){
 			b.kill();
 		}, null, this);
 
@@ -313,63 +278,7 @@ SideScroller.Game.prototype = {
 			}, null, this);
 		}, this);
 
-		this.player.body.velocity.x = 0;
-
-		if (this.cursors.left.isDown) {
-			this.player.body.velocity.x = -300;
-			if (this.player.body.blocked.down)
-				this.player.animations.play('left');
-			else 
-				this.player.animations.play('jumpleft');
-			this.direction = "left";
-		} else if (this.cursors.right.isDown) {
-			this.player.body.velocity.x = 300;
-			if (this.player.body.blocked.down)
-				this.player.animations.play('right');
-			else 
-				this.player.animations.play('jumpright');
-			this.direction = "right";
-		} else if (this.cursors.down.isDown) {
-			if (this.player.body.blocked.down) {
-				if (this.direction == "right") {
-					this.player.animations.play('duckright');
-				} else {
-					this.player.animations.play('duckleft');
-				}
-			}
-		} else {
-			if (this.direction == "right") {
-				this.player.animations.play('standright');
-			} else {
-				this.player.animations.play('standleft');
-			}
-		}
-		
-		if (this.cursors.jump.isDown && this.player.body.blocked.down) {
-			this.player.body.velocity.y = -750;
-			if (this.direction == "right") {
-				this.player.animations.play('jumpright');
-			} else {
-				this.player.animations.play('jumpleft');
-			}
-		}
-
-
-		if (this.cursors.shoot.isDown && this.unlockedFire) {
-			
-			this.unlockedFire = false;
-			this.weapon.fireRate = 0;
-			var angles = [0, 15, -15, 30, -30];
-			for(var i = 0; i < angles.length; i++) {
-				this.weapon.fireAngle = angles[i];
-				if (this.direction == "left") this.weapon.fireAngle += 180;
-				this.weapon.fire();
-			}
-			this.weapon.fireRate = 100;
-			setTimeout(function(){
-				this.unlockedFire = true;
-			}.bind(this), 850);
-		}
+		this.player.update();
 	},
 
 	render: function() {	
