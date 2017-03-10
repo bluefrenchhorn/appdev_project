@@ -63,7 +63,7 @@ SideScroller.Game.prototype = {
 
 		this.spawns = this.findObjectsByType('spawnPoint', this.map, 'objectLayer');
 		this.walkingEnemies = this.game.add.group();
-		this.walkingEnemies.createMultiple(10, 'player');
+		this.walkingEnemies.createMultiple(20, 'player');
 		this.walkingEnemies.children.forEach(function(e){
 			e.animations.add('standright', ["standright"], 5, true);
 			e.animations.add('standleft', ["standleft"], 5, true);
@@ -88,22 +88,25 @@ SideScroller.Game.prototype = {
 		}, this);
 
 		setInterval(function(){
+			var level = Math.floor(Math.random() * 2) + 1; 
+
 			var enemy = this.walkingEnemies.getFirstExists(false);
 			if (enemy != null) {
-				
+				(level == 1) ? ypos = 50 : ypos = this.spawns[0].y;
 				var flag = true;
 				this.noSpawn.forEach(function(rect){
-					if (rect.contains(this.game.camera.x + this.game.camera.width, 50)) {
+					if (rect.contains(this.game.camera.x + this.game.camera.width, ypos)) {
 						flag = false;
 					}
 				}, this);
 				if (flag) {
 				
-					enemy.reset(this.game.camera.x + this.game.camera.width, 50);
+					enemy.reset(this.game.camera.x + this.game.camera.width, ypos);
 					enemy.revive();
 					enemy.body.velocity.x = -300;
 				}
 			}
+
 		}.bind(this), 2000);
 
 		/////////////////////////////End of Object layer stuff////////////////////////////////////
