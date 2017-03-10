@@ -8,7 +8,9 @@ SideScroller.Preload.prototype = {
 		this.load.image('gameTiles', 'assets/platformertiles.png');
 		this.load.image('jungleTiles', 'assets/jungle.png');
 		this.load.atlas('player', 'assets/spritesheet.png', 'assets/sprites.json');
+		this.load.atlas('tank', 'assets/tank.png', 'assets/tank.json');
 		this.load.image('bullet', 'assets/bullet.png');
+		this.load.audio('backgroundmusic', 'assets/musicStage2.ogg');
 	},
 
 	create: function() {

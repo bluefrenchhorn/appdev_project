@@ -8,7 +8,8 @@ SideScroller.Game.prototype = {
 	},
 
 	create: function() {
-
+		this.bgmusic = this.game.add.audio('backgroundmusic');
+		this.bgmusic.play();
 		this.map = this.game.add.tilemap('level1');
 		this.map.addTilesetImage('textures', 'gameTiles');
 		this.map.addTilesetImage('water', 'jungleTiles');
@@ -132,7 +133,7 @@ SideScroller.Game.prototype = {
 		this.weapon.trackSprite(this.player, this.player.width/2, this.player.height/2);
 
 		this.game.physics.arcade.enable(this.player);
-		this.player.body.gravity.y = 1000;
+		this.player.body.gravity.y = 1500;
 		this.player.body.collideWorldBounds = true;
 		this.game.camera.follow(this.player, null);
 		this.game.camera.deadzone = new Phaser.Rectangle(0, 0, this.game.camera.width/2, this.game.camera.height);
@@ -222,7 +223,7 @@ SideScroller.Game.prototype = {
 
 	update: function() {
 		this.shooterEnemies.children.forEach(function(e){
-			if (Phaser.Math.distance(this.player.x, 0, e.x, 0) < this.game.camera.width) {
+			if (e.inCamera) {
 				e.weapon.fireAtSprite(this.player);
 			}
 		}, this);
@@ -335,7 +336,7 @@ SideScroller.Game.prototype = {
 		}
 		
 		if (this.cursors.jump.isDown && this.player.body.blocked.down) {
-			this.player.body.velocity.y = -600;
+			this.player.body.velocity.y = -750;
 			if (this.direction == "right") {
 				this.player.animations.play('jumpright');
 			} else {
@@ -357,7 +358,7 @@ SideScroller.Game.prototype = {
 			this.weapon.fireRate = 100;
 			setTimeout(function(){
 				this.unlockedFire = true;
-			}.bind(this), 100);
+			}.bind(this), 850);
 		}
 	},
 
