@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="170" height="20" tilewidth="32" tileheight="32" nextobjectid="38">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="170" height="20" tilewidth="32" tileheight="32" nextobjectid="43">
  <tileset firstgid="1" name="textures" tilewidth="32" tileheight="32" tilecount="24" columns="8">
   <image source="platformertiles.png" width="256" height="96"/>
   <tile id="0">
@@ -113,6 +113,8 @@
   <object id="34" name="hey" type="shooterSpawn" x="2847" y="417" width="64" height="61"/>
   <object id="36" type="shooterSpawn" x="4063" y="415" width="67" height="62"/>
   <object id="37" type="shooterSpawn" x="5090" y="449" width="61" height="61"/>
+  <object id="39" type="noSpawn" x="4544" y="-1" width="897" height="641"/>
+  <object id="42" type="noSpawn" x="1985" y="-1" width="766" height="641"/>
  </objectgroup>
  <layer name="platformsHigh" width="170" height="20">
   <data encoding="base64">

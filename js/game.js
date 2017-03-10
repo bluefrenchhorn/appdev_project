@@ -41,29 +41,7 @@ SideScroller.Game.prototype = {
 	        right: false
 	    });
 
-	    this.collideMid = true;
-	    this.map.setTileIndexCallback(2, function() { 
-	    	if (this.cursors.down.isDown && this.cursors.jump.isDown || this.collideMid == false) {          
-	     		this.collideMid = false;
-	     		setTimeout(function(){
-	     			this.collideMid = true;
-	     		}.bind(this), 500);
-	     		return false;
-	     	}
-	     	return true;           
-	     }, this, this.platformsMid);
-
-	    this.collideHigh = true;
-	    this.map.setTileIndexCallback(2, function() { 
-	    	if (this.cursors.down.isDown && this.cursors.jump.isDown || this.collideHigh == false) {          
-	     		this.collideHigh = false;
-	     		setTimeout(function(){
-	     			this.collideHigh = true;
-	     		}.bind(this), 500);
-	     		return false;
-	     	}
-	     	return true;           
-	     }, this, this.platformsHigh);
+	    
 
 		this.background.resizeWorld();
 
@@ -102,16 +80,31 @@ SideScroller.Game.prototype = {
 			e.collideWorldBounds = true;
 		}, this);
 
+		result = this.findObjectsByType('noSpawn', this.map, 'objectLayer');
+		this.noSpawn = [];
+		result.forEach(function(zone, i){
+			var rect = new Phaser.Rectangle(zone.x, zone.y, zone.width, zone.height);
+			this.noSpawn[i] = rect;
+		}, this);
+
 		setInterval(function(){
 			var enemy = this.walkingEnemies.getFirstExists(false);
 			if (enemy != null) {
-				enemy.reset(this.spawns[0].x, this.spawns[0].y);
-				enemy.revive();
-				enemy.body.velocity.x = -300;
+				
+				var flag = true;
+				this.noSpawn.forEach(function(rect){
+					if (rect.contains(this.game.camera.x + this.game.camera.width, 50)) {
+						flag = false;
+					}
+				}, this);
+				if (flag) {
+				
+					enemy.reset(this.game.camera.x + this.game.camera.width, 50);
+					enemy.revive();
+					enemy.body.velocity.x = -300;
+				}
 			}
 		}.bind(this), 2000);
-
-
 
 		/////////////////////////////End of Object layer stuff////////////////////////////////////
 
@@ -191,6 +184,33 @@ SideScroller.Game.prototype = {
 			'jump': Phaser.KeyCode.J,
 			'shoot': Phaser.KeyCode.K
 		});
+
+		this.collideMid = true;
+	    this.map.setTileIndexCallback(2, function(sprite) { 
+	    	if (this.collideMid == false && sprite == this.player) return false;
+	    	if (this.cursors.down.isDown && this.cursors.jump.isDown && sprite == this.player) {          
+	     		this.collideMid = false;
+	     		setTimeout(function(){
+	     			this.collideMid = true;
+	     		}.bind(this), 500);
+	     		return false;
+	     	}
+	     	return true;           
+	     }, this, this.platformsMid);
+
+	    this.collideHigh = true;
+	    this.map.setTileIndexCallback(2, function(sprite) { 
+	    	if (this.collideHigh == false && sprite == this.player) return false;
+	    	if (this.cursors.down.isDown && this.cursors.jump.isDown && sprite == this.player) {        
+	     		this.collideHigh = false;
+	     		setTimeout(function(){
+	     			this.collideHigh = true;
+	     		}.bind(this), 500);
+	     		return false;
+	     	}
+	     	
+	     	return true;           
+	     }, this, this.platformsHigh);
 	},
 
 	direction: "right",
@@ -322,29 +342,7 @@ SideScroller.Game.prototype = {
 
 
 		if (this.cursors.shoot.isDown && this.unlockedFire) {
-			/*
-			if (this.direction == "right") {
-				this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
-			} else {
-				this.weapon.fireAngle = Phaser.ANGLE_LEFT;
-			}
 			
-			//this.weapon.fireRate = 0;
-
-			for ( var i = 0; i < 5; i++ ) {
-
-				// Left bullets
-				var left = new Phaser.Point(this.player.position.x - (10+i*6), this.player.position.y - 20);
-				this.weapon.fireAngle = -95 - i*10;
-				this.weapon.fire(left);
-							
-				// Right bullets
-				var right = new Phaser.Point(this.player.position.x + (10+i*6), this.player.position.y - 20);
-				this.weapon.fireAngle = -85 + i*10;
-				this.weapon.fire(right);
-
-			}
-			*/
 			this.unlockedFire = false;
 			this.weapon.fireRate = 0;
 			var angles = [0, 15, -15, 30, -30];
