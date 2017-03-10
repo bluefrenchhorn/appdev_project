@@ -45,17 +45,19 @@ SideScroller.Player.prototype.update = function() {
 
 	if (this.cursors.left.isDown) {
 		this.body.velocity.x = -300;
-		if (this.body.blocked.down)
+		if (this.body.blocked.down) {
 			this.animations.play('left');
-		else 
+		} else { 
 			this.animations.play('jumpleft');
+		}
 		this.direction = 'left';
 	} else if (this.cursors.right.isDown) {
 		this.body.velocity.x = 300;
-		if (this.body.blocked.down)
+		if (this.body.blocked.down) {
 			this.animations.play('right');
-		else 
+		} else { 
 			this.animations.play('jumpright');
+		}
 		this.direction = 'right';
 	} else if (this.cursors.down.isDown) {
 		if (this.body.blocked.down) {
@@ -81,7 +83,6 @@ SideScroller.Player.prototype.update = function() {
 			this.animations.play('jumpleft');
 		}
 	}
-
 
 	if (this.cursors.shoot.isDown && this.unlockedFire) {
 		this.unlockedFire = false;
