@@ -168,10 +168,6 @@ SideScroller.Stage2.prototype = {
 
 		//sweeper to player/enemy collisions
 		this.game.physics.arcade.collide(this.cameraBlock, this.player);
-		this.game.physics.arcade.overlap(this.sweeper, this.shooterEnemies, function(sweeper, enemy){
-			enemy.weapon.destroy();
-			enemy.destroy();
-		});
 
 		//sweeper to bullet collisions
 		this.game.physics.arcade.overlap(this.bulletBlock, this.player.weapon.bullets, this.bulletSweepKill);
