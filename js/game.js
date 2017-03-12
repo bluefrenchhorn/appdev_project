@@ -1,8 +1,8 @@
 var SideScroller = SideScroller || {};
 
-SideScroller.Game = function(){};
+SideScroller.Stage1 = function(){};
 
-SideScroller.Game.prototype = {
+SideScroller.Stage1.prototype = {
 	preload: function() {
 		this.game.time.advancedTiming = true;
 	},
@@ -27,14 +27,14 @@ SideScroller.Game.prototype = {
 		this.map.setCollisionBetween(1, 3, true, 'platformsMid');
 		this.map.setCollisionBetween(1, 3, true, 'platformsHigh');
 
-	    setTileCollision(this.platformsMid, [1, 2, 3], {
+	    SideScroller.setTileCollision(this.platformsMid, [1, 2, 3], {
 	        top: true,
 	        bottom: false,
 	        left: false,
 	        right: false
 	    });
 
-	    setTileCollision(this.platformsHigh, [1, 2, 3], {
+	    SideScroller.setTileCollision(this.platformsHigh, [1, 2, 3], {
 	        top: true,
 	        bottom: false,
 	        left: false,
@@ -44,7 +44,7 @@ SideScroller.Game.prototype = {
 		this.player = new SideScroller.Player(this.game, 100, 300);
 
 		this.collideMid = true;
-	    this.map.setTileIndexCallback(2, function(sprite) { 
+	    this.map.setTileIndexCallback([1, 2, 3], function(sprite) { 
 	    	if (this.collideMid == false && sprite == this.player) return false;
 	    	if (this.player.cursors.down.isDown && this.player.cursors.jump.isDown && sprite == this.player) {          
 	     		this.collideMid = false;
@@ -54,10 +54,10 @@ SideScroller.Game.prototype = {
 	     		return false;
 	     	}
 	     	return true;           
-	     }, this, this.platformsMid);
+	    }, this, this.platformsMid);
 
 	    this.collideHigh = true;
-	    this.map.setTileIndexCallback(2, function(sprite) { 
+	    this.map.setTileIndexCallback([1, 2, 3], function(sprite) { 
 	    	if (this.collideHigh == false && sprite == this.player) return false;
 	    	if (this.player.cursors.down.isDown && this.player.cursors.jump.isDown && sprite == this.player) {        
 	     		this.collideHigh = false;
@@ -76,7 +76,7 @@ SideScroller.Game.prototype = {
 		this.game.camera.deadzone = new Phaser.Rectangle(0, 0, this.game.camera.width/2, this.game.camera.height);
 
 		/////////////////////// BLOCKERS ////////////////////////////////
-
+		/*
 		this.cameraBlock = this.game.add.sprite(-10, 0, null);
 		this.game.physics.arcade.enable(this.cameraBlock);
 		this.cameraBlock.body.setSize(10, this.game.camera.height);
@@ -94,7 +94,10 @@ SideScroller.Game.prototype = {
 		this.bulletBlock.body.setSize(50, this.game.camera.height);
 		this.bulletBlock.body.immovable = true;
 		this.bulletBlock.fixedToCamera = true;
-
+		*/
+		this.cameraBlock = new SideScroller.Blocker(this.game, -50, 0);
+		this.sweeper = new SideScroller.Blocker(this.game, -100, 0);
+		this.bulletBlock = new SideScroller.Blocker(this.game, this.game.camera.width, 0);
 		///////////////////// END OF BLOCKERS /////////////////////////////
 
 		///////////////////////Object layer stuff////////////////////////////
@@ -191,12 +194,21 @@ SideScroller.Game.prototype = {
 
 		this.bgmusic = this.game.add.audio('backgroundmusic');
 		this.bgmusic.play();
+
+		this.control = this.game.input.keyboard.addKeys({
+			'pause': Phaser.KeyCode.P
+		});
+
+		this.game.input.keyboard.onDownCallback = function(event){
+			if(event.keyCode == Phaser.KeyCode.P && this.game.paused)
+				this.game.paused = false;
+		};
 	},
 
 	update: function() {
 		//detect if player reached level end
 		if (this.winZone.contains(this.player.x + this.player.width/2, this.player.y + this.player.height/2)) {
-			console.log("we have a winner!!!");
+			this.state.start('Stage2');
 		}
 
 		//platform collisions
@@ -262,12 +274,15 @@ SideScroller.Game.prototype = {
 		}, this);
 
 		this.player.update();
-	},
 
+		if(this.control.pause.isDown)
+			this.game.paused = true;
+	},
+	
 	render: function() {	
 		this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
 	},
-
+	
 	playerDeath: function(player, bullet) {
 		player.kill();
 		player.reset(player.x, 0);
@@ -294,47 +309,3 @@ SideScroller.Game.prototype = {
 		return result;
 	}
 };
-
-function setTileCollision(mapLayer, idxOrArray, dirs) {
- 
-    var mFunc; // tile index matching function
-    if (idxOrArray.length) {
-        // if idxOrArray is an array, use a function with a loop
-        mFunc = function(inp) {
-            for (var i = 0; i < idxOrArray.length; i++) {
-                if (idxOrArray[i] === inp) {
-                    return true;
-                }
-            }
-            return false;
-        };
-    } else {
-        // if idxOrArray is a single number, use a simple function
-        mFunc = function(inp) {
-            return inp === idxOrArray;
-        };
-    }
- 
-    // get the 2-dimensional tiles array for this layer
-    var d = mapLayer.map.layers[mapLayer.index].data;
-     
-    for (var i = 0; i < d.length; i++) {
-        for (var j = 0; j < d[i].length; j++) {
-            var t = d[i][j];
-            if (mFunc(t.index)) {
-                 
-                t.collideUp = dirs.top;
-                t.collideDown = dirs.bottom;
-                t.collideLeft = dirs.left;
-                t.collideRight = dirs.right;
-                 
-                t.faceTop = dirs.top;
-                t.faceBottom = dirs.bottom;
-                t.faceLeft = dirs.left;
-                t.faceRight = dirs.right;
-                 
-            }
-        }
-    }
- 
-}

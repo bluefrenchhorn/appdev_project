@@ -99,3 +99,15 @@ SideScroller.Player.prototype.update = function() {
 		}.bind(this), 850);
 	}
 }
+
+SideScroller.Blocker = function(game, x, y){
+	Phaser.Sprite.call(this, game, x, y, null);
+	this.game.add.existing(this);
+	this.game.physics.arcade.enable(this);
+	this.body.setSize(50, this.game.camera.height);
+	this.body.immovable = true;
+	this.fixedToCamera = true;
+};
+
+SideScroller.Blocker.prototype = Object.create(Phaser.Sprite.prototype);
+SideScroller.Blocker.prototype.constructor = SideScroller.Blocker;
