@@ -19,6 +19,6 @@ SideScroller.Preload.prototype = {
 	},
 
 	create: function() {
-		this.state.start('Stage2');
+		this.state.start('Stage1');
 	}
 };

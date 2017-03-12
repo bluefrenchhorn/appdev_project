@@ -38,7 +38,11 @@ SideScroller.Stage2.prototype = {
 		SideScroller.setTileCollision(this.mid, [1, 2, 3], settings);
 		SideScroller.setTileCollision(this.front, [1, 2, 3], settings);
 
-		this.player = new SideScroller.Player(this.game, 50, 50);
+		// load player spawn locations
+		this.spawns = this.findObjectsByType('playerSpawn', this.map, 'obj');
+	    this.curSpawn = 0;
+
+		this.player = new SideScroller.Player(this.game, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 
 		this.collideBack = true;
 		this.collideMid = true;
@@ -149,13 +153,18 @@ SideScroller.Stage2.prototype = {
 		this.game.physics.arcade.collide(this.shooterEnemies, this.mid);
 		this.game.physics.arcade.collide(this.shooterEnemies, this.front);
 
+		//update player spawn location
+		if (this.curSpawn + 1 < this.spawns.length && this.player.x > this.spawns[this.curSpawn+1].x)
+			this.curSpawn += 1;
+
 		//water collisions
 		this.game.physics.arcade.overlap(this.player, this.waterDetection, function(player){
 			player.kill();
-			player.reset(player.x, 0);
+			player.reset(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 			player.body.velocity.y = 0;
 			player.revive();
-		});
+			this.game.camera.setPosition(this.spawns[this.curSpawn].x - 100, 0);
+		}, null, this);
 
 		//sweeper to player/enemy collisions
 		this.game.physics.arcade.collide(this.cameraBlock, this.player);
@@ -173,7 +182,7 @@ SideScroller.Stage2.prototype = {
 
 		//player death to enemy detection
 		this.shooterEnemies.children.forEach(function(e){
-			this.game.physics.arcade.overlap(this.player, e.weapon.bullets, this.playerDeath);
+			this.game.physics.arcade.overlap(this.player, e.weapon.bullets, this.playerDeath, null, this);
 		}, this);
 
 		//enemy death to player detection
@@ -200,9 +209,10 @@ SideScroller.Stage2.prototype = {
 	
 	playerDeath: function(player, bullet) {
 		player.kill();
-		player.reset(player.x, 0);
+		player.reset(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 		player.body.velocity.y = 0;
 		player.revive();
+		this.game.camera.setPosition(this.spawns[this.curSpawn].x - 100, 0);
 		if (bullet) {
 			bullet.kill();
 		}

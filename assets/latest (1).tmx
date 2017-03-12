@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="170" height="20" tilewidth="32" tileheight="32" nextobjectid="43">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="170" height="20" tilewidth="32" tileheight="32" nextobjectid="45">
  <tileset firstgid="1" name="textures" tilewidth="32" tileheight="32" tilecount="24" columns="8">
   <image source="platformertiles.png" width="256" height="96"/>
   <tile id="0">
@@ -94,7 +94,9 @@
   </data>
  </layer>
  <objectgroup name="objectLayer">
-  <object id="1" name="startPoint" x="1" y="286" width="98" height="98"/>
+  <object id="1" name="startPoint" type="playerSpawn" x="160" y="318" width="64" height="65"/>
+  <object id="43" name="checkpoint1" type="playerSpawn" x="1218" y="91" width="73" height="68"/>
+  <object id="44" name="checkpoint2" type="playerSpawn" x="2596" y="93" width="73" height="68"/>
   <object id="2" name="endPoint" x="5344.5" y="416" width="94" height="96"/>
   <object id="11" name="water1" type="water" x="577" y="625" width="127" height="13"/>
   <object id="15" type="water" x="895" y="616" width="128" height="23"/>

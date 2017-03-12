@@ -44,71 +44,74 @@ SideScroller.Player.prototype = Object.create(Phaser.Sprite.prototype);
 SideScroller.Player.prototype.constructor = SideScroller.Player;
 
 SideScroller.Player.prototype.update = function() {
-	this.body.velocity.x = 0;
+	if (this.alive) {
+		this.body.velocity.x = 0;
 
-	if (this.cursors.left.isDown) {
-		this.body.velocity.x = -300;
-		if (this.body.blocked.down) {
-			this.animations.play('left');
-		} else { 
-			this.animations.play('jumpleft');
-		}
-		this.direction = 'left';
-	} else if (this.cursors.right.isDown) {
-		this.body.velocity.x = 300;
-		if (this.body.blocked.down) {
-			this.animations.play('right');
-		} else { 
-			this.animations.play('jumpright');
-		}
-		this.direction = 'right';
-	} else if (this.cursors.down.isDown) {
-		if (this.body.blocked.down) {
-			if (this.direction == 'right') {
-				this.animations.play('duckright');
-			} else {
-				this.animations.play('duckleft');
+		if (this.cursors.left.isDown) {
+			this.body.velocity.x = -300;
+			if (this.body.blocked.down) {
+				this.animations.play('left');
+			} else { 
+				this.animations.play('jumpleft');
 			}
-			//set sprite size
-			this.body.setSize(59, 18, 0, 28);
-			this.isDucked = true;
-		}
-	} else {
-		if (this.direction == 'right') {
-			this.animations.play('standright');
+			this.direction = 'left';
+		} else if (this.cursors.right.isDown) {
+			this.body.velocity.x = 300;
+			if (this.body.blocked.down) {
+				this.animations.play('right');
+			} else { 
+				this.animations.play('jumpright');
+			}
+			this.direction = 'right';
+		} else if (this.cursors.down.isDown) {
+			if (this.body.blocked.down) {
+				if (this.direction == 'right') {
+					this.animations.play('duckright');
+				} else {
+					this.animations.play('duckleft');
+				}
+				//set sprite size
+				this.body.setSize(59, 18, 0, 28);
+				this.isDucked = true;
+			}
 		} else {
-			this.animations.play('standleft');
+			if (this.direction == 'right') {
+				this.animations.play('standright');
+			} else {
+				this.animations.play('standleft');
+			}
+			if (this.isDucked) {
+				//reset sprite size
+				this.body.setSize(37, 46, 0, 0);
+				this.isDucked = false;
+			}
 		}
-		if (this.isDucked) {
-			//reset sprite size
-			this.body.setSize(37, 46, 0, 0);
-			this.isDucked = false;
+		
+		if (this.cursors.jump.isDown && this.body.blocked.down) {
+			this.body.velocity.y = -750;
+			if (this.direction == 'right') {
+				this.animations.play('jumpright');
+			} else {
+				this.animations.play('jumpleft');
+			}
+		}
+
+		if (this.cursors.shoot.isDown && this.unlockedFire) {
+			this.unlockedFire = false;
+			this.weapon.fireRate = 0;
+			var angles = [0, 15, -15, 30, -30];
+			for(var i = 0; i < angles.length; i++) {
+				this.weapon.fireAngle = angles[i];
+				if (this.direction == 'left') this.weapon.fireAngle += 180;
+				this.weapon.fire();
+			}
+			this.weapon.fireRate = 100;
+			setTimeout(function(){
+				this.unlockedFire = true;
+			}.bind(this), 850);
 		}
 	}
 	
-	if (this.cursors.jump.isDown && this.body.blocked.down) {
-		this.body.velocity.y = -750;
-		if (this.direction == 'right') {
-			this.animations.play('jumpright');
-		} else {
-			this.animations.play('jumpleft');
-		}
-	}
-
-	if (this.cursors.shoot.isDown && this.unlockedFire) {
-		this.unlockedFire = false;
-		this.weapon.fireRate = 0;
-		var angles = [0, 15, -15, 30, -30];
-		for(var i = 0; i < angles.length; i++) {
-			this.weapon.fireAngle = angles[i];
-			if (this.direction == 'left') this.weapon.fireAngle += 180;
-			this.weapon.fire();
-		}
-		this.weapon.fireRate = 100;
-		setTimeout(function(){
-			this.unlockedFire = true;
-		}.bind(this), 850);
-	}
 }
 
 SideScroller.Blocker = function(game, x, y){

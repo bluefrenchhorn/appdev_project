@@ -41,7 +41,10 @@ SideScroller.Stage1.prototype = {
 	        right: false
 	    });
 
-		this.player = new SideScroller.Player(this.game, 100, 300);
+	    this.spawns = this.findObjectsByType('playerSpawn', this.map, 'objectLayer');
+	    this.curSpawn = 0;
+
+		this.player = new SideScroller.Player(this.game, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 
 		this.collideMid = true;
 	    this.map.setTileIndexCallback([1, 2, 3], function(sprite) { 
@@ -79,7 +82,7 @@ SideScroller.Stage1.prototype = {
 
 		///////////////////////Object layer stuff////////////////////////////
 
-		var res = this.map.objects['objectLayer'][1];
+		var res = this.map.objects['objectLayer'][3];
 
 		this.winZone = new Phaser.Rectangle(res.x, res.y, res.width, res.height);
 
@@ -93,7 +96,6 @@ SideScroller.Stage1.prototype = {
 			sprite.body.setSize(element.width, element.height);
 		}, this);
 
-		this.spawns = this.findObjectsByType('spawnPoint', this.map, 'objectLayer');
 		this.walkingEnemies = this.game.add.group();
 		this.walkingEnemies.createMultiple(20, 'enemy');
 		this.walkingEnemies.children.forEach(function(e){
@@ -193,13 +195,18 @@ SideScroller.Stage1.prototype = {
 		this.game.physics.arcade.collide(this.walkingEnemies, this.platformsMid);
 		this.game.physics.arcade.collide(this.walkingEnemies, this.platformsHigh);
 
+		//update player spawn location
+		if (this.curSpawn + 1 < this.spawns.length && this.player.x > this.spawns[this.curSpawn+1].x)
+			this.curSpawn += 1;
+
 		//water collisions
 		this.game.physics.arcade.overlap(this.player, this.waterDetection, function(player){
 			player.kill();
-			player.reset(player.x, 0);
+			player.reset(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 			player.body.velocity.y = 0;
 			player.revive();
-		});
+			this.game.camera.setPosition(this.spawns[this.curSpawn].x - 100, 0);
+		}, null, this);
 		this.game.physics.arcade.overlap(this.walkingEnemies, this.waterDetection, function(enemy){
 			enemy.body.velocity.x = 0;
 			enemy.kill();
@@ -207,10 +214,6 @@ SideScroller.Stage1.prototype = {
 
 		//sweeper to player/enemy collisions
 		this.game.physics.arcade.collide(this.cameraBlock, this.player);
-		this.game.physics.arcade.overlap(this.sweeper, this.shooterEnemies, function(sweeper, enemy){
-			enemy.weapon.destroy();
-			enemy.destroy();
-		});
 		this.game.physics.arcade.overlap(this.sweeper, this.walkingEnemies, function(sweeper, enemy){
 			enemy.kill();
 		});
@@ -225,12 +228,13 @@ SideScroller.Stage1.prototype = {
 		//player death to enemy detection
 		this.game.physics.arcade.overlap(this.player, this.walkingEnemies, function(player){
 			player.kill();
-			player.reset(player.x, 0);
+			player.reset(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 			player.body.velocity.y = 0;
 			player.revive();
-		});
+			this.game.camera.setPosition(this.spawns[this.curSpawn].x - 100, 0);
+		}, null, this);
 		this.shooterEnemies.children.forEach(function(e){
-			this.game.physics.arcade.overlap(this.player, e.weapon.bullets, this.playerDeath);
+			this.game.physics.arcade.overlap(this.player, e.weapon.bullets, this.playerDeath, null, this);
 		}, this);
 
 		//enemy death to player detection
@@ -266,9 +270,10 @@ SideScroller.Stage1.prototype = {
 	
 	playerDeath: function(player, bullet) {
 		player.kill();
-		player.reset(player.x, 0);
+		player.reset(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 		player.body.velocity.y = 0;
 		player.revive();
+		this.game.camera.setPosition(this.spawns[this.curSpawn].x - 100, 0);
 		if (bullet) {
 			bullet.kill();
 		}

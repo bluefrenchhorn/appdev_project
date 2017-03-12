@@ -74,7 +74,7 @@
         }, 
         {
          "draworder":"topdown",
-         "height":20,
+         "height":0,
          "name":"obj",
          "objects":[
                 {
@@ -89,24 +89,24 @@
                  "y":631
                 }, 
                 {
-                 "height":27.2727272727273,
+                 "height":27.2727,
                  "id":3,
                  "name":"",
                  "rotation":0,
                  "type":"water",
                  "visible":true,
-                 "width":2681.81818181818,
-                 "x":1603.0303030303,
-                 "y":609.090909090909
+                 "width":2681.82,
+                 "x":1603.03,
+                 "y":609.091
                 }, 
                 {
-                 "height":31.3333333333333,
+                 "height":31.3333,
                  "id":4,
                  "name":"",
                  "rotation":0,
                  "type":"water",
                  "visible":true,
-                 "width":318.666666666666,
+                 "width":318.667,
                  "x":6432,
                  "y":608
                 }, 
@@ -117,9 +117,9 @@
                  "rotation":0,
                  "type":"shooterSpawn",
                  "visible":true,
-                 "width":65.3333333333333,
+                 "width":65.3333,
                  "x":1024,
-                 "y":448.666666666667
+                 "y":448.667
                 }, 
                 {
                  "height":63,
@@ -263,15 +263,70 @@
                  "width":61,
                  "x":5217,
                  "y":416
+                }, 
+                {
+                 "height":59,
+                 "id":22,
+                 "name":"",
+                 "rotation":0,
+                 "type":"playerSpawn",
+                 "visible":true,
+                 "width":64,
+                 "x":192,
+                 "y":129
+                }, 
+                {
+                 "height":59,
+                 "id":23,
+                 "name":"",
+                 "rotation":0,
+                 "type":"playerSpawn",
+                 "visible":true,
+                 "width":64,
+                 "x":1171,
+                 "y":291
+                }, 
+                {
+                 "height":59,
+                 "id":26,
+                 "name":"",
+                 "rotation":0,
+                 "type":"playerSpawn",
+                 "visible":true,
+                 "width":64,
+                 "x":2904,
+                 "y":130
+                }, 
+                {
+                 "height":59,
+                 "id":27,
+                 "name":"",
+                 "rotation":0,
+                 "type":"playerSpawn",
+                 "visible":true,
+                 "width":64,
+                 "x":4546,
+                 "y":258
+                }, 
+                {
+                 "height":59,
+                 "id":28,
+                 "name":"",
+                 "rotation":0,
+                 "type":"playerSpawn",
+                 "visible":true,
+                 "width":64,
+                 "x":6250,
+                 "y":130
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":300,
+         "width":0,
          "x":0,
          "y":0
         }],
- "nextobjectid":22,
+ "nextobjectid":29,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
