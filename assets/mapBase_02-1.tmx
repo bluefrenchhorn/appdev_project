@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="300" height="20" tilewidth="32" tileheight="32" nextobjectid="5">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="300" height="20" tilewidth="32" tileheight="32" nextobjectid="22">
  <tileset firstgid="1" name="textures" tilewidth="32" tileheight="32" tilecount="24" columns="8">
   <image source="platformertiles.png" width="256" height="96"/>
  </tileset>
@@ -46,5 +46,19 @@
   <object id="2" type="water" x="225" y="631" width="445" height="7"/>
   <object id="3" type="water" x="1603.03" y="609.091" width="2681.82" height="27.2727"/>
   <object id="4" type="water" x="6432" y="608" width="318.667" height="31.3333"/>
+  <object id="5" type="shooterSpawn" x="1024" y="448.667" width="65.3333" height="62"/>
+  <object id="6" type="shooterSpawn" x="1376" y="287" width="64" height="63"/>
+  <object id="7" type="shooterSpawn" x="1439" y="448" width="65" height="62"/>
+  <object id="8" type="shooterSpawn" x="2050" y="127" width="63" height="63"/>
+  <object id="9" type="shooterSpawn" x="1856" y="287" width="64" height="65"/>
+  <object id="10" type="shooterSpawn" x="2242" y="415" width="62" height="63"/>
+  <object id="11" type="shooterSpawn" x="2495" y="126" width="64" height="64"/>
+  <object id="12" type="shooterSpawn" x="3393" y="62" width="63" height="64"/>
+  <object id="13" type="shooterSpawn" x="3810" y="288" width="63" height="62"/>
+  <object id="14" type="shooterSpawn" x="3393" y="382" width="61" height="64"/>
+  <object id="15" type="shooterSpawn" x="4256" y="64" width="62" height="63"/>
+  <object id="16" type="shooterSpawn" x="5343" y="127" width="67" height="63"/>
+  <object id="17" type="shooterSpawn" x="4865" y="257" width="64" height="62"/>
+  <object id="21" type="shooterSpawn" x="5217" y="416" width="61" height="62"/>
  </objectgroup>
 </map>

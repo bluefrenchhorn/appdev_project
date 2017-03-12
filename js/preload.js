@@ -12,11 +12,13 @@ SideScroller.Preload.prototype = {
 		this.load.image('caveTiles', 'assets/platformertiles_redone.png');
 		this.load.atlas('player', 'assets/spritesheet.png', 'assets/sprites.json');
 		this.load.atlas('tank', 'assets/tank.png', 'assets/tank.json');
+		this.load.atlas('enemy', 'assets/enemy.png', 'assets/enemy.json');
 		this.load.image('bullet', 'assets/bullet.png');
+		this.load.image('enemybullet', 'assets/enemybullet.png')
 		this.load.audio('backgroundmusic', 'assets/musicStage2.ogg');
 	},
 
 	create: function() {
-		this.state.start('Stage1');
+		this.state.start('Stage2');
 	}
 };

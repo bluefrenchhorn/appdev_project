@@ -35,6 +35,9 @@ SideScroller.Player = function(game, x, y) {
 
 	this.unlockedFire = true;
 	this.direction = 'right';
+	this.isDucked = false;
+
+	this.body.setSize(37, 46, 0, 0);
 }
 
 SideScroller.Player.prototype = Object.create(Phaser.Sprite.prototype);
@@ -66,12 +69,20 @@ SideScroller.Player.prototype.update = function() {
 			} else {
 				this.animations.play('duckleft');
 			}
+			//set sprite size
+			this.body.setSize(59, 18, 0, 28);
+			this.isDucked = true;
 		}
 	} else {
 		if (this.direction == 'right') {
 			this.animations.play('standright');
 		} else {
 			this.animations.play('standleft');
+		}
+		if (this.isDucked) {
+			//reset sprite size
+			this.body.setSize(37, 46, 0, 0);
+			this.isDucked = false;
 		}
 	}
 	

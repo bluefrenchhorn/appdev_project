@@ -104,6 +104,28 @@ SideScroller.Stage2.prototype = {
 		this.water = this.map.createLayer('water');
 
 		//shooting enemies
+		this.shooterEnemies = this.game.add.group();
+
+		result = this.findObjectsByType('shooterSpawn', this.map, 'obj');
+		result.forEach(function(spawn){
+			var e = this.shooterEnemies.create(spawn.x, spawn.y, 'enemy');
+			
+			e.animations.add('standright', ["standright"], 5, true);
+			e.animations.add('standleft', ["standleft"], 5, true);
+			e.animations.play('standleft');
+
+			this.game.physics.arcade.enable(e);
+			e.body.gravity.y = 1000;
+			e.collideWorldBounds = true;
+
+			e.weapon = this.game.add.weapon(30, 'enemybullet');
+			e.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+			e.weapon.bulletSpeed = 600;
+			e.weapon.fireRate = 2000;
+			e.weapon.trackSprite(e, e.width/2, e.height/2);
+		}, this);
+
+		//bg music
 
 		this.control = this.game.input.keyboard.addKeys({
 			'pause': Phaser.KeyCode.P
@@ -123,6 +145,10 @@ SideScroller.Stage2.prototype = {
 		this.game.physics.arcade.collide(this.player, this.mid);
 		this.game.physics.arcade.collide(this.player, this.front);
 
+		this.game.physics.arcade.collide(this.shooterEnemies, this.back);
+		this.game.physics.arcade.collide(this.shooterEnemies, this.mid);
+		this.game.physics.arcade.collide(this.shooterEnemies, this.front);
+
 		//water collisions
 		this.game.physics.arcade.overlap(this.player, this.waterDetection, function(player){
 			player.kill();
@@ -131,7 +157,40 @@ SideScroller.Stage2.prototype = {
 			player.revive();
 		});
 
+		//sweeper to player/enemy collisions
 		this.game.physics.arcade.collide(this.cameraBlock, this.player);
+		this.game.physics.arcade.overlap(this.sweeper, this.shooterEnemies, function(sweeper, enemy){
+			enemy.weapon.destroy();
+			enemy.destroy();
+		});
+
+		//sweeper to bullet collisions
+		this.game.physics.arcade.overlap(this.bulletBlock, this.player.weapon.bullets, this.bulletSweepKill);
+		this.game.physics.arcade.overlap(this.sweeper, this.player.weapon.bullets, this.bulletSweepKill);
+		this.shooterEnemies.children.forEach(function(e){
+			this.game.physics.arcade.overlap(this.sweeper, e.weapon.bullets, this.bulletSweepKill);
+		}, this);
+
+		//player death to enemy detection
+		this.shooterEnemies.children.forEach(function(e){
+			this.game.physics.arcade.overlap(this.player, e.weapon.bullets, this.playerDeath);
+		}, this);
+
+		//enemy death to player detection
+		this.game.physics.arcade.overlap(this.player.weapon.bullets, this.shooterEnemies, function(bullet, enemy) {
+			bullet.kill();
+			enemy.destroy();
+			enemy.weapon.destroy();
+		});
+
+		//shooter enemies shoot at player
+		this.shooterEnemies.children.forEach(function(e){
+			if (e.inCamera) {
+				e.weapon.fireAtSprite(this.player);
+				if (e.x - this.player.x > 0) e.animations.play('standleft');
+				else e.animations.play('standright');
+			}
+		}, this);
 
 		this.player.update();
 
@@ -139,6 +198,20 @@ SideScroller.Stage2.prototype = {
 			this.game.paused = true;
 	},
 	
+	playerDeath: function(player, bullet) {
+		player.kill();
+		player.reset(player.x, 0);
+		player.body.velocity.y = 0;
+		player.revive();
+		if (bullet) {
+			bullet.kill();
+		}
+	},
+
+	bulletSweepKill: function(sweeper, bullet) {
+		bullet.kill();
+	},
+
 	render: function() {	
 		this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
 	},

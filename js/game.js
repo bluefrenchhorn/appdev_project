@@ -95,26 +95,17 @@ SideScroller.Stage1.prototype = {
 
 		this.spawns = this.findObjectsByType('spawnPoint', this.map, 'objectLayer');
 		this.walkingEnemies = this.game.add.group();
-		this.walkingEnemies.createMultiple(20, 'player');
+		this.walkingEnemies.createMultiple(20, 'enemy');
 		this.walkingEnemies.children.forEach(function(e){
-			
 			e.animations.add('standright', ["standright"], 5, true);
 			e.animations.add('standleft', ["standleft"], 5, true);
-			e.animations.add('duckleft', ["duckleft1"], 5, true);
-			e.animations.add('duckright', ["duckright4"], 5, true);
-			e.animations.add('jumpleft', ["sprite45"], 5, true);
-			e.animations.add('jumpright', ["sprite44"], 5, true);
-			e.animations.add('left', Phaser.Animation.generateFrameNames('left', 1, 11), 5, true);
-			e.animations.add('right', Phaser.Animation.generateFrameNames('right', 1, 11), 5, true);
+			e.animations.add('left', Phaser.Animation.generateFrameNames('left', 1, 8), 5, true);
+			e.animations.add('right', Phaser.Animation.generateFrameNames('right', 1, 8), 5, true);
 			e.animations.play('left');
 
 			this.game.physics.arcade.enable(e);
 			e.body.gravity.y = 1000;
 			e.collideWorldBounds = true;
-			/*
-			SideScroller.EnemyProperties(this.game, e, false);
-			e.animations.play('left');
-			*/
 		}, this);
 
 		result = this.findObjectsByType('noSpawn', this.map, 'objectLayer');
@@ -153,31 +144,21 @@ SideScroller.Stage1.prototype = {
 
 		result = this.findObjectsByType('shooterSpawn', this.map, 'objectLayer');
 		result.forEach(function(spawn){
-			var e = this.shooterEnemies.create(spawn.x, spawn.y, 'player');
+			var e = this.shooterEnemies.create(spawn.x, spawn.y, 'enemy');
 			
 			e.animations.add('standright', ["standright"], 5, true);
 			e.animations.add('standleft', ["standleft"], 5, true);
-			e.animations.add('duckleft', ["duckleft1"], 5, true);
-			e.animations.add('duckright', ["duckright4"], 5, true);
-			e.animations.add('jumpleft', ["sprite45"], 5, true);
-			e.animations.add('jumpright', ["sprite44"], 5, true);
-			e.animations.add('left', Phaser.Animation.generateFrameNames('left', 1, 11), 5, true);
-			e.animations.add('right', Phaser.Animation.generateFrameNames('right', 1, 11), 5, true);
 			e.animations.play('standleft');
 
 			this.game.physics.arcade.enable(e);
 			e.body.gravity.y = 1000;
 			e.collideWorldBounds = true;
 
-			e.weapon = this.game.add.weapon(30, 'bullet');
+			e.weapon = this.game.add.weapon(30, 'enemybullet');
 			e.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
 			e.weapon.bulletSpeed = 600;
 			e.weapon.fireRate = 2000;
-			e.weapon.trackSprite(e);
-			/*
-			SideScroller.EnemyProperties(this.game, e, true);
-			e.animations.play('standleft');
-			*/
+			e.weapon.trackSprite(e, e.width/2, e.height/2);
 		}, this);
 
 		this.bgmusic = this.game.add.audio('backgroundmusic');
@@ -242,7 +223,12 @@ SideScroller.Stage1.prototype = {
 		}, this);
 
 		//player death to enemy detection
-		this.game.physics.arcade.overlap(this.player, this.walkingEnemies, this.playerDeath);
+		this.game.physics.arcade.overlap(this.player, this.walkingEnemies, function(player){
+			player.kill();
+			player.reset(player.x, 0);
+			player.body.velocity.y = 0;
+			player.revive();
+		});
 		this.shooterEnemies.children.forEach(function(e){
 			this.game.physics.arcade.overlap(this.player, e.weapon.bullets, this.playerDeath);
 		}, this);
@@ -263,6 +249,8 @@ SideScroller.Stage1.prototype = {
 		this.shooterEnemies.children.forEach(function(e){
 			if (e.inCamera) {
 				e.weapon.fireAtSprite(this.player);
+				if (e.x - this.player.x > 0) e.animations.play('standleft');
+				else e.animations.play('standright');
 			}
 		}, this);
 
