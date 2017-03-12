@@ -111,8 +111,17 @@ SideScroller.Player.prototype.update = function() {
 			}.bind(this), 850);
 		}
 	}
-	
 }
+
+SideScroller.Player.prototype.death = function(x, y) {
+	this.kill();
+	this.reset(x, y);
+	this.body.velocity.y = 0;
+	this.revive();
+	this.game.camera.setPosition(x - 100, 0);
+	this.game.playerLives--;
+	if (this.game.playerLives == 0) console.log("ded");
+};
 
 SideScroller.Blocker = function(game, x, y){
 	Phaser.Sprite.call(this, game, x, y, null);

@@ -16,6 +16,8 @@ SideScroller.Preload.prototype = {
 		this.load.image('bullet', 'assets/bullet.png');
 		this.load.image('enemybullet', 'assets/enemybullet.png')
 		this.load.audio('backgroundmusic', 'assets/musicStage2.ogg');
+
+		this.game.playerLives = 3;
 	},
 
 	create: function() {

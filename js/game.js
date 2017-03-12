@@ -166,6 +166,10 @@ SideScroller.Stage1.prototype = {
 		this.bgmusic = this.game.add.audio('backgroundmusic');
 		this.bgmusic.play();
 
+		//UI
+		this.uiLives = this.game.add.text(100, 25, 'Lives: ' + this.game.playerLives, {font: '30px Comic Sans MS', fill: '#fff'});
+		this.uiLives.fixedToCamera = true;
+
 		this.control = this.game.input.keyboard.addKeys({
 			'pause': Phaser.KeyCode.P
 		});
@@ -201,11 +205,7 @@ SideScroller.Stage1.prototype = {
 
 		//water collisions
 		this.game.physics.arcade.overlap(this.player, this.waterDetection, function(player){
-			player.kill();
-			player.reset(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
-			player.body.velocity.y = 0;
-			player.revive();
-			this.game.camera.setPosition(this.spawns[this.curSpawn].x - 100, 0);
+			player.death(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 		}, null, this);
 		this.game.physics.arcade.overlap(this.walkingEnemies, this.waterDetection, function(enemy){
 			enemy.body.velocity.x = 0;
@@ -227,14 +227,13 @@ SideScroller.Stage1.prototype = {
 
 		//player death to enemy detection
 		this.game.physics.arcade.overlap(this.player, this.walkingEnemies, function(player){
-			player.kill();
-			player.reset(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
-			player.body.velocity.y = 0;
-			player.revive();
-			this.game.camera.setPosition(this.spawns[this.curSpawn].x - 100, 0);
+			player.death(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 		}, null, this);
 		this.shooterEnemies.children.forEach(function(e){
-			this.game.physics.arcade.overlap(this.player, e.weapon.bullets, this.playerDeath, null, this);
+			this.game.physics.arcade.overlap(this.player, e.weapon.bullets, function(player, bullet){
+				player.death(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
+				bullet.kill();
+			}, null, this);
 		}, this);
 
 		//enemy death to player detection
@@ -260,23 +259,14 @@ SideScroller.Stage1.prototype = {
 
 		this.player.update();
 
+		this.uiLives.setText('Lives: ' + this.game.playerLives);
+
 		if(this.control.pause.isDown)
 			this.game.paused = true;
 	},
 	
 	render: function() {	
 		this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
-	},
-	
-	playerDeath: function(player, bullet) {
-		player.kill();
-		player.reset(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
-		player.body.velocity.y = 0;
-		player.revive();
-		this.game.camera.setPosition(this.spawns[this.curSpawn].x - 100, 0);
-		if (bullet) {
-			bullet.kill();
-		}
 	},
 
 	bulletSweepKill: function(sweeper, bullet) {
