@@ -80,14 +80,30 @@ SideScroller.Stage2.prototype = {
 	     	return true;           
 	    }, this, this.front);
 
-		this.water = this.map.createLayer('water');
-
 		this.game.camera.follow(this.player, null);
 		this.game.camera.deadzone = new Phaser.Rectangle(0, 0, this.game.camera.width/2, this.game.camera.height);
 	
 		this.cameraBlock = new SideScroller.Blocker(this.game, -50, 0);
 		this.sweeper = new SideScroller.Blocker(this.game, -100, 0);
 		this.bulletBlock = new SideScroller.Blocker(this.game, this.game.camera.width, 0);
+
+		//winzone code here
+
+		this.waterDetection = this.game.add.group();
+		this.waterDetection.enableBody = true;
+
+		var result = this.findObjectsByType('water', this.map, 'obj');
+
+		result.forEach(function(element){
+			var sprite = this.waterDetection.create(element.x, element.y, element.id);
+			sprite.body.setSize(element.width, element.height);
+		}, this);
+
+		//walking enemies
+
+		this.water = this.map.createLayer('water');
+
+		//shooting enemies
 
 		this.control = this.game.input.keyboard.addKeys({
 			'pause': Phaser.KeyCode.P
@@ -100,9 +116,20 @@ SideScroller.Stage2.prototype = {
 	},
 
 	update: function() {
-		this.game.physics.arcade.collide(this.player, this.layer_b);
-		this.game.physics.arcade.collide(this.player, this.layer_f);
-		this.game.physics.arcade.collide(this.player, this.layer_f_f);
+		//level end detection here
+
+		//platform collisions
+		this.game.physics.arcade.collide(this.player, this.back);
+		this.game.physics.arcade.collide(this.player, this.mid);
+		this.game.physics.arcade.collide(this.player, this.front);
+
+		//water collisions
+		this.game.physics.arcade.overlap(this.player, this.waterDetection, function(player){
+			player.kill();
+			player.reset(player.x, 0);
+			player.body.velocity.y = 0;
+			player.revive();
+		});
 
 		this.game.physics.arcade.collide(this.cameraBlock, this.player);
 
@@ -115,7 +142,7 @@ SideScroller.Stage2.prototype = {
 	render: function() {	
 		this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
 	},
-	
+
 	findObjectsByType: function(type, map, layerName) {
 		var result = new Array();
 

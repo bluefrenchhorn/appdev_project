@@ -70,35 +70,12 @@ SideScroller.Stage1.prototype = {
 	     	return true;           
 	    }, this, this.platformsHigh);
 
-		this.water = this.map.createLayer('liquid');
-
 		this.game.camera.follow(this.player, null);
 		this.game.camera.deadzone = new Phaser.Rectangle(0, 0, this.game.camera.width/2, this.game.camera.height);
 
-		/////////////////////// BLOCKERS ////////////////////////////////
-		/*
-		this.cameraBlock = this.game.add.sprite(-10, 0, null);
-		this.game.physics.arcade.enable(this.cameraBlock);
-		this.cameraBlock.body.setSize(10, this.game.camera.height);
-		this.cameraBlock.body.immovable = true;
-		this.cameraBlock.fixedToCamera = true;
-
-		this.sweeper = this.game.add.sprite(-100, 0, null);
-		this.game.physics.arcade.enable(this.sweeper);
-		this.sweeper.body.setSize(50, this.game.camera.height);
-		this.sweeper.body.immovable = true;
-		this.sweeper.fixedToCamera = true;
-
-		this.bulletBlock = this.game.add.sprite(this.game.camera.width, 0, null);
-		this.game.physics.arcade.enable(this.bulletBlock);
-		this.bulletBlock.body.setSize(50, this.game.camera.height);
-		this.bulletBlock.body.immovable = true;
-		this.bulletBlock.fixedToCamera = true;
-		*/
 		this.cameraBlock = new SideScroller.Blocker(this.game, -50, 0);
 		this.sweeper = new SideScroller.Blocker(this.game, -100, 0);
 		this.bulletBlock = new SideScroller.Blocker(this.game, this.game.camera.width, 0);
-		///////////////////// END OF BLOCKERS /////////////////////////////
 
 		///////////////////////Object layer stuff////////////////////////////
 
@@ -120,6 +97,7 @@ SideScroller.Stage1.prototype = {
 		this.walkingEnemies = this.game.add.group();
 		this.walkingEnemies.createMultiple(20, 'player');
 		this.walkingEnemies.children.forEach(function(e){
+			
 			e.animations.add('standright', ["standright"], 5, true);
 			e.animations.add('standleft', ["standleft"], 5, true);
 			e.animations.add('duckleft', ["duckleft1"], 5, true);
@@ -133,6 +111,10 @@ SideScroller.Stage1.prototype = {
 			this.game.physics.arcade.enable(e);
 			e.body.gravity.y = 1000;
 			e.collideWorldBounds = true;
+			/*
+			SideScroller.EnemyProperties(this.game, e, false);
+			e.animations.play('left');
+			*/
 		}, this);
 
 		result = this.findObjectsByType('noSpawn', this.map, 'objectLayer');
@@ -164,6 +146,7 @@ SideScroller.Stage1.prototype = {
 
 		}.bind(this), 2000);
 
+		this.water = this.map.createLayer('liquid');
 		/////////////////////////////End of Object layer stuff////////////////////////////////////
 
 		this.shooterEnemies = this.game.add.group();
@@ -171,6 +154,7 @@ SideScroller.Stage1.prototype = {
 		result = this.findObjectsByType('shooterSpawn', this.map, 'objectLayer');
 		result.forEach(function(spawn){
 			var e = this.shooterEnemies.create(spawn.x, spawn.y, 'player');
+			
 			e.animations.add('standright', ["standright"], 5, true);
 			e.animations.add('standleft', ["standleft"], 5, true);
 			e.animations.add('duckleft', ["duckleft1"], 5, true);
@@ -190,6 +174,10 @@ SideScroller.Stage1.prototype = {
 			e.weapon.bulletSpeed = 600;
 			e.weapon.fireRate = 2000;
 			e.weapon.trackSprite(e);
+			/*
+			SideScroller.EnemyProperties(this.game, e, true);
+			e.animations.play('standleft');
+			*/
 		}, this);
 
 		this.bgmusic = this.game.add.audio('backgroundmusic');
@@ -225,7 +213,12 @@ SideScroller.Stage1.prototype = {
 		this.game.physics.arcade.collide(this.walkingEnemies, this.platformsHigh);
 
 		//water collisions
-		this.game.physics.arcade.overlap(this.player, this.waterDetection, this.playerDeath);
+		this.game.physics.arcade.overlap(this.player, this.waterDetection, function(player){
+			player.kill();
+			player.reset(player.x, 0);
+			player.body.velocity.y = 0;
+			player.revive();
+		});
 		this.game.physics.arcade.overlap(this.walkingEnemies, this.waterDetection, function(enemy){
 			enemy.body.velocity.x = 0;
 			enemy.kill();

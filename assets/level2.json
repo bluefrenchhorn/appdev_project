@@ -71,8 +71,53 @@
          "width":300,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":20,
+         "name":"obj",
+         "objects":[
+                {
+                 "height":7,
+                 "id":2,
+                 "name":"",
+                 "rotation":0,
+                 "type":"water",
+                 "visible":true,
+                 "width":445,
+                 "x":225,
+                 "y":631
+                }, 
+                {
+                 "height":27.2727272727273,
+                 "id":3,
+                 "name":"",
+                 "rotation":0,
+                 "type":"water",
+                 "visible":true,
+                 "width":2681.81818181818,
+                 "x":1603.0303030303,
+                 "y":609.090909090909
+                }, 
+                {
+                 "height":31.3333333333333,
+                 "id":4,
+                 "name":"",
+                 "rotation":0,
+                 "type":"water",
+                 "visible":true,
+                 "width":318.666666666666,
+                 "x":6432,
+                 "y":608
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":300,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":1,
+ "nextobjectid":5,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
