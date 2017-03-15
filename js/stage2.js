@@ -38,8 +38,15 @@ SideScroller.Stage2.prototype = {
 		SideScroller.setTileCollision(this.mid, [1, 2, 3], settings);
 		SideScroller.setTileCollision(this.front, [1, 2, 3], settings);
 
+		//powerups
+		this.powerups = this.game.add.group();
+		this.map.createFromObjects('obj', 1480, 'powerup', 206);
+		this.map.createFromObjects('obj', 1389, 'powerup', 102);
+		this.map.createFromObjects('obj', 1415, 'powerup', 141);
+		this.map.createFromObjects('obj', 1376, 'powerup', 124);
+
 		// load player spawn locations
-		this.spawns = this.findObjectsByType('playerSpawn', this.map, 'obj');
+		this.spawns = SideScroller.findObjectsByType('playerSpawn', this.map, 'obj');
 	    this.curSpawn = 0;
 
 		this.player = new SideScroller.Player(this.game, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
@@ -96,7 +103,7 @@ SideScroller.Stage2.prototype = {
 		this.waterDetection = this.game.add.group();
 		this.waterDetection.enableBody = true;
 
-		var result = this.findObjectsByType('water', this.map, 'obj');
+		var result = SideScroller.findObjectsByType('water', this.map, 'obj');
 
 		result.forEach(function(element){
 			var sprite = this.waterDetection.create(element.x, element.y, element.id);
@@ -110,7 +117,7 @@ SideScroller.Stage2.prototype = {
 		//shooting enemies
 		this.shooterEnemies = this.game.add.group();
 
-		result = this.findObjectsByType('shooterSpawn', this.map, 'obj');
+		result = SideScroller.findObjectsByType('shooterSpawn', this.map, 'obj');
 		result.forEach(function(spawn){
 			var e = this.shooterEnemies.create(spawn.x, spawn.y, 'enemy');
 			
@@ -130,6 +137,10 @@ SideScroller.Stage2.prototype = {
 		}, this);
 
 		//bg music
+
+		//UI
+		this.uiLives = this.game.add.text(100, 25, 'Lives: ' + this.game.playerLives, {font: '30px Comic Sans MS', fill: '#fff'});
+		this.uiLives.fixedToCamera = true;
 
 		this.control = this.game.input.keyboard.addKeys({
 			'pause': Phaser.KeyCode.P
@@ -159,7 +170,7 @@ SideScroller.Stage2.prototype = {
 
 		//water collisions
 		this.game.physics.arcade.overlap(this.player, this.waterDetection, function(player){
-			player.death(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
+			player.death(this, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 		}, null, this);
 
 		//sweeper to player/enemy collisions
@@ -175,7 +186,7 @@ SideScroller.Stage2.prototype = {
 		//player death to enemy detection
 		this.shooterEnemies.children.forEach(function(e){
 			this.game.physics.arcade.overlap(this.player, e.weapon.bullets, function(player, bullet){
-				player.death(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
+				player.death(this, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 				bullet.kill();
 			}, null, this);
 		}, this);
@@ -198,6 +209,8 @@ SideScroller.Stage2.prototype = {
 
 		this.player.update();
 
+		this.uiLives.setText('Lives: ' + this.game.playerLives);
+
 		if(this.control.pause.isDown)
 			this.game.paused = true;
 	},
@@ -208,17 +221,5 @@ SideScroller.Stage2.prototype = {
 
 	render: function() {	
 		this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
-	},
-
-	findObjectsByType: function(type, map, layerName) {
-		var result = new Array();
-
-		map.objects[layerName].forEach(function(element){
-			if(element.type === type) {
-				result.push(element);
-			}
-		});
-
-		return result;
 	}
 };

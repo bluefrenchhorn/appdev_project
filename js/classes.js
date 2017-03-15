@@ -113,14 +113,14 @@ SideScroller.Player.prototype.update = function() {
 	}
 }
 
-SideScroller.Player.prototype.death = function(x, y) {
+SideScroller.Player.prototype.death = function(context, x, y) {
 	this.kill();
 	this.reset(x, y);
 	this.body.velocity.y = 0;
 	this.revive();
 	this.game.camera.setPosition(x - 100, 0);
 	this.game.playerLives--;
-	if (this.game.playerLives == 0) console.log("ded");
+	if (this.game.playerLives == 0) context.state.start('Gameover');
 };
 
 SideScroller.Blocker = function(game, x, y){

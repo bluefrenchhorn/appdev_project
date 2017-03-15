@@ -41,7 +41,14 @@ SideScroller.Stage1.prototype = {
 	        right: false
 	    });
 
-	    this.spawns = this.findObjectsByType('playerSpawn', this.map, 'objectLayer');
+	   	//powerups
+		this.powerups = this.game.add.group();
+		this.map.createFromObjects('objectLayer', 1071, 'powerup', 206);
+		this.map.createFromObjects('objectLayer', 967, 'powerup', 102);
+		this.map.createFromObjects('objectLayer', 1006, 'powerup', 141);
+		this.map.createFromObjects('objectLayer', 989, 'powerup', 124);
+
+	    this.spawns = SideScroller.findObjectsByType('playerSpawn', this.map, 'objectLayer');
 	    this.curSpawn = 0;
 
 		this.player = new SideScroller.Player(this.game, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
@@ -89,7 +96,7 @@ SideScroller.Stage1.prototype = {
 		this.waterDetection = this.game.add.group();
 		this.waterDetection.enableBody = true;
 
-		var result = this.findObjectsByType('water', this.map, 'objectLayer');
+		var result = SideScroller.findObjectsByType('water', this.map, 'objectLayer');
 
 		result.forEach(function(element){
 			var sprite = this.waterDetection.create(element.x, element.y, element.id);
@@ -110,7 +117,7 @@ SideScroller.Stage1.prototype = {
 			e.collideWorldBounds = true;
 		}, this);
 
-		result = this.findObjectsByType('noSpawn', this.map, 'objectLayer');
+		result = SideScroller.findObjectsByType('noSpawn', this.map, 'objectLayer');
 		this.noSpawn = [];
 		result.forEach(function(zone, i){
 			var rect = new Phaser.Rectangle(zone.x, zone.y, zone.width, zone.height);
@@ -144,7 +151,7 @@ SideScroller.Stage1.prototype = {
 
 		this.shooterEnemies = this.game.add.group();
 
-		result = this.findObjectsByType('shooterSpawn', this.map, 'objectLayer');
+		result = SideScroller.findObjectsByType('shooterSpawn', this.map, 'objectLayer');
 		result.forEach(function(spawn){
 			var e = this.shooterEnemies.create(spawn.x, spawn.y, 'enemy');
 			
@@ -205,7 +212,7 @@ SideScroller.Stage1.prototype = {
 
 		//water collisions
 		this.game.physics.arcade.overlap(this.player, this.waterDetection, function(player){
-			player.death(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
+			player.death(this, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 		}, null, this);
 		this.game.physics.arcade.overlap(this.walkingEnemies, this.waterDetection, function(enemy){
 			enemy.body.velocity.x = 0;
@@ -227,11 +234,11 @@ SideScroller.Stage1.prototype = {
 
 		//player death to enemy detection
 		this.game.physics.arcade.overlap(this.player, this.walkingEnemies, function(player){
-			player.death(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
+			player.death(this, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 		}, null, this);
 		this.shooterEnemies.children.forEach(function(e){
 			this.game.physics.arcade.overlap(this.player, e.weapon.bullets, function(player, bullet){
-				player.death(this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
+				player.death(this, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 				bullet.kill();
 			}, null, this);
 		}, this);

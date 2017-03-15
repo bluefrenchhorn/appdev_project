@@ -43,10 +43,31 @@ SideScroller.setTileCollision = function(mapLayer, idxOrArray, dirs) {
  
 };
 
+SideScroller.findObjectsByType = function(type, map, layerName) {
+	var result = new Array();
+
+	map.objects[layerName].forEach(function(element){
+		if(element.type === type) {
+			result.push(element);
+		}
+	});
+
+	return result;
+};
+
+SideScroller.Gameover = function(){};
+
+SideScroller.Gameover.prototype = {
+	create: function(){
+		this.game.add.text(50, 50, "u fucking lost!!", {font: '30px Comic Sans MS', fill: '#fff'});
+	}
+};
+
 SideScroller.game = new Phaser.Game(960, 640, Phaser.AUTO, '');
 SideScroller.game.state.add('Boot', SideScroller.Boot);
 SideScroller.game.state.add('Preload', SideScroller.Preload);
 SideScroller.game.state.add('Stage1', SideScroller.Stage1);
 SideScroller.game.state.add('Stage2', SideScroller.Stage2);
+SideScroller.game.state.add('Gameover', SideScroller.Gameover);
 
 SideScroller.game.state.start('Boot');
