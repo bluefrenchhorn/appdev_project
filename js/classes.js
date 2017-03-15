@@ -72,6 +72,7 @@ SideScroller.Player.prototype.update = function() {
 				}
 				//set sprite size
 				this.body.setSize(59, 18, 0, 28);
+				this.weapon.trackSprite(this, this.width/2, 37);
 				this.isDucked = true;
 			}
 		} else {
@@ -83,6 +84,7 @@ SideScroller.Player.prototype.update = function() {
 			if (this.isDucked) {
 				//reset sprite size
 				this.body.setSize(37, 46, 0, 0);
+				this.weapon.trackSprite(this, this.width/2, this.height/2);
 				this.isDucked = false;
 			}
 		}
