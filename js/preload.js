@@ -14,8 +14,9 @@ SideScroller.Preload.prototype = {
 		this.load.atlas('player', 'assets/spritesheet.png', 'assets/sprites.json');
 		this.load.atlas('tank', 'assets/tank.png', 'assets/tank.json');
 		this.load.atlas('enemy', 'assets/enemy.png', 'assets/enemy.json');
+		this.load.atlas('hud_icons', 'assets/hud_icons.png', 'assets/hud_icons.json');
 		this.load.image('bullet', 'assets/bullet.png');
-		this.load.image('enemybullet', 'assets/enemybullet.png')
+		this.load.image('enemybullet', 'assets/enemybullet.png');
 		this.load.audio('backgroundmusic', 'assets/musicStage2.ogg');
 
 		this.game.playerLives = 9999;

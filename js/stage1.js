@@ -43,10 +43,11 @@ SideScroller.Stage1.prototype = {
 
 	   	//powerups
 		this.powerups = this.game.add.group();
-		this.map.createFromObjects('objectLayer', 1071, 'powerup', 206);
-		this.map.createFromObjects('objectLayer', 967, 'powerup', 102);
-		this.map.createFromObjects('objectLayer', 1006, 'powerup', 141);
-		this.map.createFromObjects('objectLayer', 989, 'powerup', 124);
+		this.powerups.enableBody = true;
+		this.map.createFromObjects('objectLayer', 1071, 'powerup', 206, true, false, this.powerups);
+		this.map.createFromObjects('objectLayer', 967, 'powerup', 102, true, false, this.powerups);
+		this.map.createFromObjects('objectLayer', 1006, 'powerup', 141, true, false, this.powerups);
+		this.map.createFromObjects('objectLayer', 989, 'powerup', 124, true, false, this.powerups);
 
 	    this.spawns = SideScroller.findObjectsByType('playerSpawn', this.map, 'objectLayer');
 	    this.curSpawn = 0;
@@ -185,6 +186,12 @@ SideScroller.Stage1.prototype = {
 			if(event.keyCode == Phaser.KeyCode.P && this.game.paused)
 				this.game.paused = false;
 		};
+
+		//hud
+		this.shield_ind = this.game.world.create(20, this.game.camera.height - 80, 'hud_icons', 'shield_inactive');
+		this.shield_ind.fixedToCamera = true;
+		this.burst_ind = this.game.world.create(100, this.game.camera.height - 80, 'hud_icons', 'burst_inactive');
+		this.burst_ind.fixedToCamera = true;
 	},
 
 	update: function() {
@@ -263,6 +270,19 @@ SideScroller.Stage1.prototype = {
 				else e.animations.play('standright');
 			}
 		}, this);
+
+		this.game.physics.arcade.overlap(this.player, this.powerups, function(a, b){
+			switch(b.name) {
+				case 'life':
+				break;
+				case 'shield':
+				this.shield_ind.frameName = 'shield_active';
+				break;
+				case 'burst':
+				this.burst_ind.frameName = 'burst_active';
+				break;
+			}
+		}, null, this);
 
 		this.player.update();
 

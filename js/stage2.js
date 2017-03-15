@@ -40,10 +40,11 @@ SideScroller.Stage2.prototype = {
 
 		//powerups
 		this.powerups = this.game.add.group();
-		this.map.createFromObjects('obj', 1480, 'powerup', 206);
-		this.map.createFromObjects('obj', 1389, 'powerup', 102);
-		this.map.createFromObjects('obj', 1415, 'powerup', 141);
-		this.map.createFromObjects('obj', 1376, 'powerup', 124);
+		this.powerups.enableBody = true;
+		this.map.createFromObjects('obj', 1480, 'powerup', 206, true, false, this.powerups);
+		this.map.createFromObjects('obj', 1389, 'powerup', 102, true, false, this.powerups);
+		this.map.createFromObjects('obj', 1415, 'powerup', 141, true, false, this.powerups);
+		this.map.createFromObjects('obj', 1376, 'powerup', 124, true, false, this.powerups);
 
 		// load player spawn locations
 		this.spawns = SideScroller.findObjectsByType('playerSpawn', this.map, 'obj');
