@@ -241,8 +241,16 @@ SideScroller.Stage1.prototype = {
 		}, this);
 
 		//player death to enemy detection
-		this.game.physics.arcade.overlap(this.player, this.walkingEnemies, function(player){
-			player.death(this, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
+		this.game.physics.arcade.overlap(this.player, this.walkingEnemies, function(player, enemy){
+			if (!enemy.shielded) {
+				if (this.player.shield) {
+					enemy.shielded = true;
+					this.game.time.events.add(500, function(){
+						enemy.shielded = false;
+					}, this);
+				}
+				player.death(this, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
+			}
 		}, null, this);
 		this.shooterEnemies.children.forEach(function(e){
 			this.game.physics.arcade.overlap(this.player, e.weapon.bullets, function(player, bullet){
