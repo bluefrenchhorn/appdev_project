@@ -6,13 +6,22 @@ SideScroller.Player = function(game, x, y) {
 
 	this.animations.add('standright', ['standright'], 5, true);
 	this.animations.add('standleft', ['standleft'], 5, true);
-	this.animations.add('duckleft', ['duckleft1'], 5, true);
-	this.animations.add('duckright', ['duckright4'], 5, true);
-	this.animations.add('jumpleft', ['sprite45'], 5, true);
-	this.animations.add('jumpright', ['sprite44'], 5, true);
+	this.animations.add('duckleft', ['duckleft'], 5, true);
+	this.animations.add('duckright', ['duckright'], 5, true);
+	this.animations.add('jumpleft', ['jumpleft'], 5, true);
+	this.animations.add('jumpright', ['jumpright'], 5, true);
 	this.animations.add('left', Phaser.Animation.generateFrameNames('left', 1, 11), 5, true);
 	this.animations.add('right', Phaser.Animation.generateFrameNames('right', 1, 11), 5, true);
 	this.animations.play('standright');
+
+	this.animations.add('deadstandright', ['deadstandright'], 5, true);
+	this.animations.add('deadstandleft', ['deadstandleft'], 5, true);
+	this.animations.add('deadduckleft', ['deadduckleft'], 5, true);
+	this.animations.add('deadduckright', ['deadduckright'], 5, true);
+	this.animations.add('deadjumpleft', ['deadjumpleft'], 5, true);
+	this.animations.add('deadjumpright', ['deadjumpright'], 5, true);
+	this.animations.add('deadleft', Phaser.Animation.generateFrameNames('deadleft', 1, 11), 5, true);
+	this.animations.add('deadright', Phaser.Animation.generateFrameNames('deadright', 1, 11), 5, true);
 
 	this.game.physics.arcade.enable(this);
 	this.body.gravity.y = 1500;
@@ -51,28 +60,31 @@ SideScroller.Player.prototype.update = function() {
 	if (this.alive) {
 		this.body.velocity.x = 0;
 
+		var dead = '';
+		if (this.immune == true) dead = 'dead';
+
 		if (this.cursors.left.isDown) {
 			this.body.velocity.x = -300;
 			if (this.body.blocked.down) {
-				this.animations.play('left');
+				this.animations.play(dead + 'left');
 			} else { 
-				this.animations.play('jumpleft');
+				this.animations.play(dead + 'jumpleft');
 			}
 			this.direction = 'left';
 		} else if (this.cursors.right.isDown) {
 			this.body.velocity.x = 300;
 			if (this.body.blocked.down) {
-				this.animations.play('right');
+				this.animations.play(dead + 'right');
 			} else { 
-				this.animations.play('jumpright');
+				this.animations.play(dead + 'jumpright');
 			}
 			this.direction = 'right';
 		} else if (this.cursors.down.isDown) {
 			if (this.body.blocked.down) {
 				if (this.direction == 'right') {
-					this.animations.play('duckright');
+					this.animations.play(dead + 'duckright');
 				} else {
-					this.animations.play('duckleft');
+					this.animations.play(dead + 'duckleft');
 				}
 				//set sprite size
 				this.body.setSize(59, 18, 0, 28);
@@ -81,9 +93,9 @@ SideScroller.Player.prototype.update = function() {
 			}
 		} else {
 			if (this.direction == 'right') {
-				this.animations.play('standright');
+				this.animations.play(dead + 'standright');
 			} else {
-				this.animations.play('standleft');
+				this.animations.play(dead + 'standleft');
 			}
 			if (this.isDucked) {
 				//reset sprite size
@@ -96,9 +108,9 @@ SideScroller.Player.prototype.update = function() {
 		if (this.cursors.jump.isDown && this.body.blocked.down) {
 			this.body.velocity.y = -750;
 			if (this.direction == 'right') {
-				this.animations.play('jumpright');
+				this.animations.play(dead + 'jumpright');
 			} else {
-				this.animations.play('jumpleft');
+				this.animations.play(dead + 'jumpleft');
 			}
 		}
 
