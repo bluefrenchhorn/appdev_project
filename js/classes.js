@@ -27,6 +27,9 @@ SideScroller.Player = function(game, x, y) {
 		'shoot': Phaser.KeyCode.K
 	});
 
+	this.fireRate = 850;
+	this.shield = false;
+
 	this.weapon = this.game.add.weapon(50, 'bullet');
 	this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
 	this.weapon.bulletSpeed = 600;
@@ -110,19 +113,24 @@ SideScroller.Player.prototype.update = function() {
 			this.weapon.fireRate = 100;
 			setTimeout(function(){
 				this.unlockedFire = true;
-			}.bind(this), 850);
+			}.bind(this), this.fireRate);
 		}
 	}
 }
 
 SideScroller.Player.prototype.death = function(context, x, y) {
-	this.kill();
-	this.reset(x, y);
-	this.body.velocity.y = 0;
-	this.revive();
-	this.game.camera.setPosition(x - 100, 0);
-	this.game.playerLives--;
-	if (this.game.playerLives == 0) context.state.start('Gameover');
+	if (this.shield == true) {
+		context.shield_ind.frameName = 'shield_inactive';
+		this.shield = false;
+	} else {
+		this.kill();
+		this.reset(x, y);
+		this.body.velocity.y = 0;
+		this.revive();
+		this.game.camera.setPosition(x - 100, 0);
+		this.game.playerLives--;
+		if (this.game.playerLives == 0) context.state.start('Gameover');
+	}
 };
 
 SideScroller.Blocker = function(game, x, y){

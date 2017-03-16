@@ -277,11 +277,22 @@ SideScroller.Stage1.prototype = {
 				break;
 				case 'shield':
 				this.shield_ind.frameName = 'shield_active';
+				this.player.shield = true;
+				this.game.time.events.add(Phaser.Timer.SECOND * 10, function(){
+					this.shield_ind.frameName = 'shield_inactive';
+					this.player.shield = false;
+				}, this);
 				break;
 				case 'burst':
 				this.burst_ind.frameName = 'burst_active';
+				this.player.fireRate = 100;
+				this.game.time.events.add(Phaser.Timer.SECOND * 5, function(){
+					this.burst_ind.frameName = 'burst_inactive';
+					this.player.fireRate = 850;
+				}, this);
 				break;
 			}
+			b.destroy();
 		}, null, this);
 
 		this.player.update();
