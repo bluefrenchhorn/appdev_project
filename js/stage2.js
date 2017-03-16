@@ -227,10 +227,6 @@ SideScroller.Stage2.prototype = {
 				case 'shield':
 				this.shield_ind.frameName = 'shield_active';
 				this.player.shield = true;
-				this.game.time.events.add(Phaser.Timer.SECOND * 10, function(){
-					this.shield_ind.frameName = 'shield_inactive';
-					this.player.shield = false;
-				}, this);
 				break;
 
 				case 'burst':
