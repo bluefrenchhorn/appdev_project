@@ -129,6 +129,7 @@ SideScroller.Player.prototype.death = function(context, x, y) {
 		this.revive();
 		this.game.camera.setPosition(x - 100, 0);
 		this.game.playerLives--;
+		context.lives_ind.removeChildAt(context.lives_ind.children.length - 1).destroy();
 		if (this.game.playerLives == 0) context.state.start('Gameover');
 	}
 };

@@ -174,10 +174,6 @@ SideScroller.Stage1.prototype = {
 		this.bgmusic = this.game.add.audio('backgroundmusic');
 		this.bgmusic.play();
 
-		//UI
-		this.uiLives = this.game.add.text(100, 25, 'Lives: ' + this.game.playerLives, {font: '30px Comic Sans MS', fill: '#fff'});
-		this.uiLives.fixedToCamera = true;
-
 		this.control = this.game.input.keyboard.addKeys({
 			'pause': Phaser.KeyCode.P
 		});
@@ -188,6 +184,11 @@ SideScroller.Stage1.prototype = {
 		};
 
 		//hud
+		this.lives_ind = this.game.add.group();
+		for(var i = 0; i < this.game.playerLives; i++) {
+			var sprite = this.lives_ind.create((20 * (i+1)) + 60 * i, 20, 'hud_icons', 'life');
+			sprite.fixedToCamera = true;
+		}
 		this.shield_ind = this.game.world.create(20, this.game.camera.height - 80, 'hud_icons', 'shield_inactive');
 		this.shield_ind.fixedToCamera = true;
 		this.burst_ind = this.game.world.create(100, this.game.camera.height - 80, 'hud_icons', 'burst_inactive');
@@ -274,7 +275,12 @@ SideScroller.Stage1.prototype = {
 		this.game.physics.arcade.overlap(this.player, this.powerups, function(a, b){
 			switch(b.name) {
 				case 'life':
+				var num_elems = this.lives_ind.children.length;
+				var ind = this.lives_ind.create(20 * (num_elems + 1) + 60 * num_elems, 20, 'hud_icons', 'life');
+				ind.fixedToCamera = true;
+				this.game.playerLives++;
 				break;
+
 				case 'shield':
 				this.shield_ind.frameName = 'shield_active';
 				this.player.shield = true;
@@ -283,6 +289,7 @@ SideScroller.Stage1.prototype = {
 					this.player.shield = false;
 				}, this);
 				break;
+
 				case 'burst':
 				this.burst_ind.frameName = 'burst_active';
 				this.player.fireRate = 100;
@@ -297,14 +304,12 @@ SideScroller.Stage1.prototype = {
 
 		this.player.update();
 
-		this.uiLives.setText('Lives: ' + this.game.playerLives);
-
 		if(this.control.pause.isDown)
 			this.game.paused = true;
 	},
 	
 	render: function() {	
-		this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
+	//	this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
 	},
 
 	bulletSweepKill: function(sweeper, bullet) {
