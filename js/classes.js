@@ -29,6 +29,7 @@ SideScroller.Player = function(game, x, y) {
 
 	this.fireRate = 850;
 	this.shield = false;
+	this.immune = false;
 
 	this.weapon = this.game.add.weapon(50, 'bullet');
 	this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
@@ -119,6 +120,7 @@ SideScroller.Player.prototype.update = function() {
 }
 
 SideScroller.Player.prototype.death = function(context, x, y) {
+	if (this.immune == true) return;
 	if (this.shield == true) {
 		context.shield_ind.frameName = 'shield_inactive';
 		this.shield = false;
@@ -131,6 +133,12 @@ SideScroller.Player.prototype.death = function(context, x, y) {
 		this.game.playerLives--;
 		context.lives_ind.removeChildAt(context.lives_ind.children.length - 1).destroy();
 		if (this.game.playerLives == 0) context.state.start('Gameover');
+		this.immune = true;
+		this.unlockedFire = false;
+		this.game.time.events.add(Phaser.Timer.SECOND * 3, function(){
+			this.immune = false;
+			this.unlockedFire = true;
+		}, this);
 	}
 };
 
