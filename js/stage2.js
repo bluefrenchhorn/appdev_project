@@ -25,6 +25,8 @@ SideScroller.Stage2.prototype = {
 		this.map.setCollisionBetween(1, 3, true, 'back');
 		this.map.setCollisionBetween(1, 3, true, 'mid');
 		this.map.setCollisionBetween(1, 3, true, 'front');
+		this.map.setCollision(9, true, 'front');
+		this.map.setCollision(11, true, 'front');
 		this.map.setCollisionBetween(25, 805, true, 'front');
 
 		var settings = {
