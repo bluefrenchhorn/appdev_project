@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="600" height="20" tilewidth="32" tileheight="32" nextobjectid="63">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="600" height="20" tilewidth="32" tileheight="32" nextobjectid="64">
  <tileset firstgid="1" name="scifi_platformTiles_32x32" tilewidth="32" tileheight="32" tilecount="805" columns="35">
   <image source="../images/scifi_platformTiles_32x32.png" width="1120" height="736"/>
   <tile id="178">
@@ -148,5 +148,6 @@
   <object id="59" name="shield" type="powerup" gid="908" x="8928" y="148.333" width="32" height="32"/>
   <object id="60" name="shield" type="powerup" gid="908" x="11650.7" y="336" width="32" height="32"/>
   <object id="61" type="doubleSpawn" x="3074.67" y="2.66667" width="11034.7" height="634.667"/>
+  <object id="63" type="noSpawn" x="18164" y="2.66667" width="1033.33" height="633.333"/>
  </objectgroup>
 </map>

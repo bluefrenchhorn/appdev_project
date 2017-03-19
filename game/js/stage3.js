@@ -84,16 +84,30 @@ SideScroller.Stage3.prototype = {
 		result = SideScroller.findObjectsByType('doubleSpawn', this.map, 'obj')[0];
 		this.doubleSpawn = new Phaser.Rectangle(result.x, result.y, result.width, result.height);
 
+		result = SideScroller.findObjectsByType('noSpawn', this.map, 'obj');
+		this.noSpawn = [];
+		result.forEach(function(zone, i){
+			var rect = new Phaser.Rectangle(zone.x, zone.y, zone.width, zone.height);
+			this.noSpawn[i] = rect;
+		}, this);
+
 		this.game.time.events.loop(2000, function(){
 			var level = Math.floor(Math.random() * 2) + 1; 
 			if (!this.doubleSpawn.contains(this.game.camera.x + this.game.camera.width, this.spawns[0].y)) level = 1;
 			var enemy = this.walkingEnemies.getFirstExists(false);
 			if (enemy != null) {
 				(level == 1) ? ypos = this.spawns[0].y : ypos = 50;
-
-				enemy.reset(this.game.camera.x + this.game.camera.width, ypos);
-				enemy.revive();
-				enemy.body.velocity.x = -300;
+				var flag = true;
+				this.noSpawn.forEach(function(rect){
+					if (rect.contains(this.game.camera.x + this.game.camera.width, ypos)) {
+						flag = false;
+					}
+				}, this);
+				if (flag) {
+					enemy.reset(this.game.camera.x + this.game.camera.width, ypos);
+					enemy.revive();
+					enemy.body.velocity.x = -300;
+				}
 			}
 		}, this);
 
@@ -118,6 +132,8 @@ SideScroller.Stage3.prototype = {
 			e.weapon.fireRate = 2000;
 			e.weapon.trackSprite(e, e.width/2, e.height/2);
 		}, this);
+
+		this.labcomp = this.game.add.sprite(this.winZone.x - 400, 224, 'comp');
 
 		//bg music
 		this.bgmusic = this.game.add.audio('music_stage3');

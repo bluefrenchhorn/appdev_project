@@ -24,6 +24,7 @@ SideScroller.Preload.prototype = {
 		this.load.atlas('hud_icons', 'assets/images/hud_icons.png', 'assets/atlas/hud_icons.json');
 		this.load.image('bullet', 'assets/images/bullet.png');
 		this.load.image('enemybullet', 'assets/images/enemybullet.png');
+		this.load.image('comp', 'assets/images/CommTerminal.png');
 
 		//menu items
 		this.load.image('quit', 'assets/images/quit.png');
