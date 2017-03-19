@@ -1,0 +1,14 @@
+.mydiv {
+	position:fixed;
+	top: 48%;
+	left: 50%;
+	width:30em;
+	border:1px solid black;
+	border-radius: 30px;
+
+	margin-top: -9em;  
+	margin-left: -15em; 
+			    
+	background-color: rgba(255, 255, 255, 0.1);;
+	display:none;
+}

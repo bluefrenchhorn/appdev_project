@@ -1,0 +1,52 @@
+.box {
+	padding-top:2em;
+	padding-left:1.8em;
+	padding-right:1.8em;
+}
+.padMid{
+	padding-top: 25em;
+	padding-bottom: 30em;
+}
+.hidden {
+	display: none;
+}
+.log_error{
+	color:red;
+}
+
+.navbar-default{
+	background-color: rgba(255,255, 255, 0.1);
+}
+
+.navbar-default .navbar-nav > li > a, .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:active, .navbar-default .navbar-nav > li > a:visited {
+	color: black;
+}
+.navbar-default .navbar-nav > li > .active, .navbar-default .navbar-nav > li > .active:hover, .navbar-default .navbar-nav > li > .active:focus, .navbar-default .navbar-nav > li > .active:active, .navbar-default .navbar-nav > li > .active:visited {
+	color: white;
+	font-size: 18px;
+}
+
+.nav {
+	display: inline-block;
+	margin-left:5.4em;  
+}
+.modal {
+  text-align: center;
+  background-color:rgba(0,0,0,0.9);
+}
+.modal-content{
+	background-color:rgba(255,255,255,0.1);
+	color:white;
+}
+
+.modal:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+}
+.modal-dialog {
+	display: inline-block;
+	text-align: left;
+	vertical-align: middle;
+}
