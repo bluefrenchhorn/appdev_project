@@ -1,3 +1,35 @@
+<?php 
+
+session_start();
+require('../process/configDatabase.php');
+
+$query = mysqli_query($conn, "SELECT * FROM players WHERE player_No = {$_SESSION['player_id']}");
+$row = mysqli_fetch_assoc($query);
+
+$leftkey = $row['leftkey'];
+$rightkey = $row['rightkey'];
+$duckkey = $row['duckkey'];
+$jumpkey = $row['jumpkey'];
+$shootkey = $row['shootkey'];
+
+$stage = 1;
+$checkpoint = 0;
+$lives = 3;
+
+if (isset($_POST['save_id'])) {
+
+	$query = mysqli_query($conn, "SELECT * FROM saves WHERE save_id = {$_POST['save_id']}");
+
+	$row = mysqli_fetch_assoc($query);
+	$stage = $row['level'];
+	$checkpoint = $row['checkpoint'];
+	$lives = $row['lives'];	
+}
+
+?>
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -120,6 +152,18 @@ SideScroller.game.state.add('Stage1', SideScroller.Stage1);
 SideScroller.game.state.add('Stage2', SideScroller.Stage2);
 SideScroller.game.state.add('Stage3', SideScroller.Stage3);
 SideScroller.game.state.add('Gameover', SideScroller.Gameover);
+
+
+SideScroller.stage = <?=$stage?>;
+SideScroller.checkpoint = <?=$checkpoint?>;
+SideScroller.playerLives = <?=$lives?>;
+SideScroller.leftkey = '<?=$leftkey?>'.charCodeAt(0);
+SideScroller.rightkey = '<?=$rightkey?>'.charCodeAt(0);
+SideScroller.duckkey = '<?=$duckkey?>'.charCodeAt(0);
+SideScroller.jumpkey = '<?=$jumpkey?>'.charCodeAt(0);
+SideScroller.shootkey = '<?=$shootkey?>'.charCodeAt(0);
+
+console.log(SideScroller.stage);
 
 SideScroller.game.state.start('Boot');
 </script>

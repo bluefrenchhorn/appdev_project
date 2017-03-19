@@ -32,6 +32,7 @@ SideScroller.Stage3.prototype = {
 		//load player spawn locations
 		this.spawns = SideScroller.findObjectsByType('playerSpawn', this.map, 'obj');
 	    this.curSpawn = 0;
+	    if (SideScroller.stage == 1) this.curSpawn = SideScroller.checkpoint;
 
 		this.player = new SideScroller.Player(this.game, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 

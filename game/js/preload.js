@@ -35,10 +35,10 @@ SideScroller.Preload.prototype = {
 		//sounds
 		this.load.audio('backgroundmusic', 'assets/audio/musicStage2.ogg');
 
-		this.game.playerLives = 3;
+		this.game.playerLives = SideScroller.playerLives;
 	},
 
 	create: function() {
-		this.state.start('Stage1');
+		this.state.start('Stage'+SideScroller.stage);
 	}
 };

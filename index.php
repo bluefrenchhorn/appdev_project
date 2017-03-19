@@ -55,7 +55,7 @@
 					          <h4 class="modal-title">Do you want to start a new game?</h4>
 					        </div>
 					        <div class="modal-footer">
-					          <form action="game/index.html" method="get" class='form-inline'>
+					          <form action="game/index.php" method="get" class='form-inline'>
 					          	<button type="submit" class="btn btn-default">Start</button>
 					          	<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 					          </form>
@@ -200,7 +200,7 @@
 					$("#saves-table").html("No save games found.");
 				}
 				for(var i = 0; i < data.length; i++) {
-					$("#saves-table > tbody").append("<tr><td>"+data[i].date_saved+"</td><td>" +data[i].time_saved+ "</td><td>Level "+data[i].level+"</td><td><button class='btn btn-warning'>Load</button> <button class='btn btn-danger delete-save'>Delete</button></td><td class='save_id'>"+data[i].save_id+"</td></tr>");
+					$("#saves-table > tbody").append("<tr><td>"+data[i].date_saved+"</td><td>" +data[i].time_saved+ "</td><td>Level "+data[i].level+"</td><td><button class='btn btn-warning load-save'>Load</button> <button class='btn btn-danger delete-save'>Delete</button></td><td class='save_id'>"+data[i].save_id+"</td></tr>");
 				}
 				
 					
@@ -264,6 +264,12 @@
 				}
 			});
 		}
+	});
+
+	$(".table-inverse").on('click', '.load-save', function(){
+		var id = $(this).parent().next().text();
+		$('body').append("<form id='load' method='POST' action='game/index.php'><input type='hidden' name='save_id' value='"+id+"'></form>");
+		$('#load').submit();
 	});
 </script>
 

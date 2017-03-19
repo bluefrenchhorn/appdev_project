@@ -28,12 +28,11 @@ SideScroller.Player = function(game, x, y) {
 	this.body.collideWorldBounds = true;
 
 	this.cursors = this.game.input.keyboard.addKeys({
-		'up': Phaser.KeyCode.W,
-		'down': Phaser.KeyCode.S,
-		'left': Phaser.KeyCode.A,
-		'right': Phaser.KeyCode.D,
-		'jump': Phaser.KeyCode.J,
-		'shoot': Phaser.KeyCode.K
+		'down': SideScroller.duckkey,
+		'left': SideScroller.leftkey,
+		'right': SideScroller.rightkey,
+		'jump': SideScroller.jumpkey,
+		'shoot': SideScroller.shootkey
 	});
 
 	this.fireRate = 850;
