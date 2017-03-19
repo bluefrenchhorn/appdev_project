@@ -83,6 +83,7 @@ SideScroller.Stage1.prototype = {
 	    }, this, this.platformsHigh);
 
 		this.game.camera.follow(this.player, null);
+		this.game.camera.setPosition(this.spawns[this.curSpawn].x - 100, 0);
 		this.game.camera.deadzone = new Phaser.Rectangle(0, 0, this.game.camera.width/2, this.game.camera.height);
 
 		this.cameraBlock = new SideScroller.Blocker(this.game, -50, 0);
@@ -174,6 +175,7 @@ SideScroller.Stage1.prototype = {
 
 		this.bgmusic = this.game.add.audio('backgroundmusic');
 		this.bgmusic.play();
+		this.sfx_powerup = this.game.add.audio('pickup');
 
 		//hud
 		this.lives_ind = this.game.add.group();
@@ -185,100 +187,16 @@ SideScroller.Stage1.prototype = {
 		this.shield_ind.fixedToCamera = true;
 		this.burst_ind = this.game.world.create(100, this.game.camera.height - 80, 'hud_icons', 'burst_inactive');
 		this.burst_ind.fixedToCamera = true;
-				/*
-		this.game.menu = this.game.add.group();
 
-		var graphics = this.game.add.graphics(0, 0);
-		graphics.lineStyle(0);
-		graphics.beginFill(0x121212, 0.7);
-		graphics.drawRect(0, 0, this.game.camera.width, this.game.camera.height);
-		graphics.fixedToCamera = true;
-		this.game.menu.add(graphics);
-
-		var menu_text = this.game.add.text(400, 100, 'Game is paused', { font: '19px Adobe Caslon Pro', fill: '#ffffff' });
-		menu_text.fixedToCamera = true;
-		this.game.menu.add(menu_text);
-		*/
-
-		this.menu_resume = this.game.add.button(100, 200, 'resume');
-		this.menu_resume.visible = false;
-		this.menu_resume.fixedToCamera = true;
-		this.menu_resume.hitArea = new Phaser.Rectangle(100, 200, 250, 50);
-
-		this.menu_savenquit = this.game.add.button(100, 270, 'savenquit');
-		this.menu_savenquit.visible = false;
-		this.menu_savenquit.fixedToCamera = true;
-		this.menu_savenquit.hitArea = new Phaser.Rectangle(100, 270, 350, 50);
-
-		this.menu_quit = this.game.add.button(100, 340, 'quit');
-		this.menu_quit.visible = false;
-		this.menu_quit.fixedToCamera = true;
-		this.menu_quit.hitArea = new Phaser.Rectangle(100, 340, 140, 50);
-
-		this.menu_volume = this.game.add.text(120, 500, "Volume: 10", {fill: '#fff'});
-		this.menu_volume.visible = false;
-		this.menu_volume.fixedToCamera = true;
-
-		this.menu_volume_up = this.game.add.button(270, 477, 'volumeup');
-		this.menu_volume_up.visible = false;
-		this.menu_volume_up.fixedToCamera = true;
-		this.menu_volume_up.hitArea = new Phaser.Rectangle(270, 477, 100, 80);
-
-		this.menu_volume_down = this.game.add.button(360, 495, 'volumedown');
-		this.menu_volume_down.visible = false;
-		this.menu_volume_down.fixedToCamera = true;
-		this.menu_volume_down.hitArea = new Phaser.Rectangle(360, 495, 100, 80);
-
-		this.game.input.keyboard.callbackContext = this;
-		this.game.input.keyboard.onUpCallback = function(event) {
-			if(event.keyCode == Phaser.KeyCode.ESC) {
-				this.game.paused = true;
-				this.menu_resume.visible = true;
-				this.menu_savenquit.visible = true;
-				this.menu_quit.visible = true;
-				this.menu_volume.visible = true;
-				this.menu_volume_up.visible = true;
-				this.menu_volume_down.visible = true;
-			}
-		};
-
-		this.game.input.onDown.add(function(event){
-			if (this.game.paused) {
-				if (this.menu_resume.hitArea.contains(event.x, event.y)) {
-					this.game.paused = false;
-					this.menu_resume.visible = false;
-					this.menu_savenquit.visible = false;
-					this.menu_quit.visible = false;
-					this.menu_volume.visible = false;
-					this.menu_volume_up.visible = false;
-					this.menu_volume_down.visible = false;
-				} else if (this.menu_quit.hitArea.contains(event.x, event.y)) {
-					if (confirm('Are you sure you want to quit?')) {
-						window.location.replace("../index.php");
-					}
-				} else if (this.menu_savenquit.hitArea.contains(event.x, event.y)) {
-					if (confirm('Are you sure you want to save and quit?')) {
-						$.ajax({
-							url: '../game/savegame.php',
-							data: {
-								level: 1,
-								checkpoint: this.curSpawn,
-								lives: this.game.playerLives
-							},
-							method: 'post',
-							success: function(){
-								window.location.replace('../index.php');
-							}
-						});
-					}
-				}
-			}
-		}, this);
+		this.menu = new SideScroller.Menu(this, this.game, 1);
 	},
 
 	update: function() {
+		this.game.sound.volume = this.menu.volume;
+
 		//detect if player reached level end
 		if (this.winZone.contains(this.player.x + this.player.width/2, this.player.y + this.player.height/2)) {
+			this.bgmusic.stop();
 			this.state.start('Stage2');
 		}
 
@@ -345,12 +263,14 @@ SideScroller.Stage1.prototype = {
 			bullet.kill();
 			enemy.kill();
 			enemy.body.velocity.x = 0;
-		});
+			this.player.sfx_death.play();
+		}, null, this);
 		this.game.physics.arcade.overlap(this.player.weapon.bullets, this.shooterEnemies, function(bullet, enemy) {
 			bullet.kill();
 			enemy.destroy();
 			enemy.weapon.destroy();
-		});
+			this.player.sfx_death.play();
+		}, null, this);
 
 		//shooter enemies shoot at player
 		this.shooterEnemies.children.forEach(function(e){
@@ -396,6 +316,7 @@ SideScroller.Stage1.prototype = {
 		}, this);
 
 		this.game.physics.arcade.overlap(this.player, this.powerups, function(a, b){
+			this.sfx_powerup.play();
 			switch(b.name) {
 				case 'life':
 				var num_elems = this.lives_ind.children.length;

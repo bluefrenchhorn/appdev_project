@@ -32,8 +32,14 @@ SideScroller.Preload.prototype = {
 		this.load.image('volumeup', 'assets/images/volume_up.png');
 		this.load.image('volumedown', 'assets/images/volume_down.png');
 
-		//sounds
+		//music
 		this.load.audio('backgroundmusic', 'assets/audio/musicStage2.ogg');
+
+		//sfx
+		this.load.audio('shoot', 'assets/audio/shoot.mp3');
+		this.load.audio('pickup', 'assets/audio/pickupShield.mp3');
+		this.load.audio('gameoversfx', 'assets/audio/gameover.mp3');
+		this.load.audio('death', 'assets/audio/die.mp3');
 
 		this.game.playerLives = SideScroller.playerLives;
 	},

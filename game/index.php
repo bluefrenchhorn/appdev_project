@@ -116,6 +116,7 @@ SideScroller.findObjectsByType = function(type, map, layerName) {
 SideScroller.Gameover = function(){};
 
 SideScroller.Gameover.prototype = {
+
 	create: function(){
 		this.map = this.game.add.tilemap('gameover');
 		this.map.addTilesetImage('platformertiles', 'gameTiles');
@@ -126,6 +127,7 @@ SideScroller.Gameover.prototype = {
 		this.stars = this.map.createLayer('stars');
 		this.text = this.map.createLayer('text');
 		this.platform = this.map.createLayer('platform');	
+		this.door = this.map.createLayer('door');
 
 		this.background.resizeWorld();
 
@@ -135,13 +137,20 @@ SideScroller.Gameover.prototype = {
 
 		this.map.setCollisionBetween(1, 24, true, 'platform');
 		this.map.setCollisionBetween(1, 10000, true, 'text');
+		this.map.setCollisionBetween(1, 10000, true, 'door');
 
 		this.water = this.map.createLayer('water');
+
+		this.game.add.audio('gameoversfx').play();
 	},
 
 	update: function(){
 		this.game.physics.arcade.collide(this.player, this.platform);
 		this.game.physics.arcade.collide(this.player, this.text);
+
+		this.game.physics.arcade.collide(this.player, this.door, function(){
+			window.location.replace('../index.php');
+		});
 	}
 };
 
@@ -162,6 +171,12 @@ SideScroller.rightkey = '<?=$rightkey?>'.charCodeAt(0);
 SideScroller.duckkey = '<?=$duckkey?>'.charCodeAt(0);
 SideScroller.jumpkey = '<?=$jumpkey?>'.charCodeAt(0);
 SideScroller.shootkey = '<?=$shootkey?>'.charCodeAt(0);
+
+<?php
+if(isset($_POST['save_id'])) {
+	echo "SideScroller.save_id = {$_POST['save_id']};";
+}
+?>
 
 console.log(SideScroller.stage);
 

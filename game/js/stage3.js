@@ -32,7 +32,7 @@ SideScroller.Stage3.prototype = {
 		//load player spawn locations
 		this.spawns = SideScroller.findObjectsByType('playerSpawn', this.map, 'obj');
 	    this.curSpawn = 0;
-	    if (SideScroller.stage == 1) this.curSpawn = SideScroller.checkpoint;
+	    if (SideScroller.stage == 3) this.curSpawn = SideScroller.checkpoint;
 
 		this.player = new SideScroller.Player(this.game, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
 
@@ -51,6 +51,7 @@ SideScroller.Stage3.prototype = {
 	    }, this, this.front);
 
 		this.game.camera.follow(this.player, null);
+		this.game.camera.setPosition(this.spawns[this.curSpawn].x - 100, 0);
 		this.game.camera.deadzone = new Phaser.Rectangle(0, 0, this.game.camera.width/2, this.game.camera.height);
 	
 		this.cameraBlock = new SideScroller.Blocker(this.game, -50, 0);
@@ -107,9 +108,13 @@ SideScroller.Stage3.prototype = {
 		this.shield_ind.fixedToCamera = true;
 		this.burst_ind = this.game.world.create(100, this.game.camera.height - 80, 'hud_icons', 'burst_inactive');
 		this.burst_ind.fixedToCamera = true;
+
+		this.menu = new SideScroller.Menu(this, this.game, 3);
 	},
 
 	update: function() {
+		this.game.sound.volume = this.menu.volume;
+
 		//detect if player reached level end
 		if (this.winZone.contains(this.player.x + this.player.width/2, this.player.y + this.player.height/2)) {
 			this.state.start('Gameover');
