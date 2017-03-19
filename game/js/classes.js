@@ -149,7 +149,7 @@ SideScroller.Player.prototype.death = function(context, x, y) {
 		this.game.playerLives--;
 		context.lives_ind.removeChildAt(context.lives_ind.children.length - 1).destroy();
 		if (this.game.playerLives == 0) {
-			context.bgmusic.stop();
+		//	context.bgmusic.stop();
 			context.state.start('Gameover');
 		}
 		this.immune = true;
