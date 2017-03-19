@@ -33,7 +33,9 @@ SideScroller.Preload.prototype = {
 		this.load.image('volumedown', 'assets/images/volume_down.png');
 
 		//music
-		this.load.audio('backgroundmusic', 'assets/audio/musicStage2.ogg');
+		this.load.audio('music_stage1', 'assets/audio/musicStage2.ogg');
+		this.load.audio('music_stage2', 'assets/audio/tropic.mp3');
+		this.load.audio('music_stage3', 'assets/audio/dewpoint.mp3');
 
 		//sfx
 		this.load.audio('shoot', 'assets/audio/shoot.mp3');

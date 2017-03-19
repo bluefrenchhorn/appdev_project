@@ -116,7 +116,7 @@ SideScroller.Player.prototype.update = function() {
 			}
 		}
 
-		if (this.cursors.shoot.isDown && this.unlockedFire) {
+		if (this.cursors.shoot.isDown && this.unlockedFire && !this.immune) {
 			this.unlockedFire = false;
 			this.weapon.fireRate = 0;
 			var angles = [0, 15, -15, 30, -30];
@@ -149,14 +149,12 @@ SideScroller.Player.prototype.death = function(context, x, y) {
 		this.game.playerLives--;
 		context.lives_ind.removeChildAt(context.lives_ind.children.length - 1).destroy();
 		if (this.game.playerLives == 0) {
-		//	context.bgmusic.stop();
+			context.bgmusic.stop();
 			context.state.start('Gameover');
 		}
 		this.immune = true;
-		this.unlockedFire = false;
 		this.game.time.events.add(Phaser.Timer.SECOND * 3, function(){
 			this.immune = false;
-			this.unlockedFire = true;
 		}, this);
 	}
 };

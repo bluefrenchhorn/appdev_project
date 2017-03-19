@@ -28,6 +28,10 @@ SideScroller.Stage3.prototype = {
 		});
 
 		//powerups
+		this.powerups = this.game.add.group();
+		this.powerups.enableBody = true;
+		this.map.createFromObjects('obj', 947, 'powerup', 141, true, false, this.powerups);
+		this.map.createFromObjects('obj', 908, 'powerup', 102, true, false, this.powerups);
 
 		//load player spawn locations
 		this.spawns = SideScroller.findObjectsByType('playerSpawn', this.map, 'obj');
@@ -63,7 +67,35 @@ SideScroller.Stage3.prototype = {
 		this.winZone = new Phaser.Rectangle(result.x, result.y, result.width, result.height);
 
 		//walking enemies
+		this.walkingEnemies = this.game.add.group();
+		this.walkingEnemies.createMultiple(20, 'enemy');
+		this.walkingEnemies.children.forEach(function(e){
+			e.animations.add('standright', ["standright"], 5, true);
+			e.animations.add('standleft', ["standleft"], 5, true);
+			e.animations.add('left', Phaser.Animation.generateFrameNames('left', 1, 8), 5, true);
+			e.animations.add('right', Phaser.Animation.generateFrameNames('right', 1, 8), 5, true);
+			e.animations.play('left');
 
+			this.game.physics.arcade.enable(e);
+			e.body.gravity.y = 1000;
+			e.collideWorldBounds = true;
+		}, this);
+
+		result = SideScroller.findObjectsByType('doubleSpawn', this.map, 'obj')[0];
+		this.doubleSpawn = new Phaser.Rectangle(result.x, result.y, result.width, result.height);
+
+		this.game.time.events.loop(2000, function(){
+			var level = Math.floor(Math.random() * 2) + 1; 
+			if (!this.doubleSpawn.contains(this.game.camera.x + this.game.camera.width, this.spawns[0].y)) level = 1;
+			var enemy = this.walkingEnemies.getFirstExists(false);
+			if (enemy != null) {
+				(level == 1) ? ypos = this.spawns[0].y : ypos = 50;
+
+				enemy.reset(this.game.camera.x + this.game.camera.width, ypos);
+				enemy.revive();
+				enemy.body.velocity.x = -300;
+			}
+		}, this);
 
 		//shooting enemies
 		this.shooterEnemies = this.game.add.group();
@@ -88,15 +120,8 @@ SideScroller.Stage3.prototype = {
 		}, this);
 
 		//bg music
-
-		this.control = this.game.input.keyboard.addKeys({
-			'pause': Phaser.KeyCode.P
-		});
-
-		this.game.input.keyboard.onDownCallback = function(event){
-			if(event.keyCode == Phaser.KeyCode.P && this.game.paused)
-				this.game.paused = false;
-		};
+		this.bgmusic = this.game.add.audio('music_stage3');
+		this.bgmusic.play();
 
 		//hud
 		this.lives_ind = this.game.add.group();
@@ -117,6 +142,7 @@ SideScroller.Stage3.prototype = {
 
 		//detect if player reached level end
 		if (this.winZone.contains(this.player.x + this.player.width/2, this.player.y + this.player.height/2)) {
+			this.bgmusic.stop();
 			this.state.start('Gameover');
 			//(TODO): add condition to make sure computer is destroyed
 		}
@@ -124,6 +150,7 @@ SideScroller.Stage3.prototype = {
 		//platform collisions
 		this.game.physics.arcade.collide(this.player, this.front);
 		this.game.physics.arcade.collide(this.shooterEnemies, this.front);
+		this.game.physics.arcade.collide(this.walkingEnemies, this.front);
 
 		//update player spawn location
 		if (this.curSpawn + 1 < this.spawns.length && this.player.x > this.spawns[this.curSpawn+1].x)
@@ -131,6 +158,9 @@ SideScroller.Stage3.prototype = {
 
 		//sweeper to player/enemy collisions
 		this.game.physics.arcade.collide(this.cameraBlock, this.player);
+		this.game.physics.arcade.overlap(this.sweeper, this.walkingEnemies, function(sweeper, enemy){
+			enemy.kill();
+		});
 
 		//sweeper to bullet collisions
 		this.game.physics.arcade.overlap(this.bulletBlock, this.player.weapon.bullets, this.bulletSweepKill);
@@ -140,6 +170,17 @@ SideScroller.Stage3.prototype = {
 		}, this);
 
 		//player death to enemy detection
+		this.game.physics.arcade.overlap(this.player, this.walkingEnemies, function(player, enemy){
+			if (!enemy.shielded) {
+				if (this.player.shield) {
+					enemy.shielded = true;
+					this.game.time.events.add(500, function(){
+						enemy.shielded = false;
+					}, this);
+				}
+				player.death(this, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
+			}
+		}, null, this);
 		this.shooterEnemies.children.forEach(function(e){
 			this.game.physics.arcade.overlap(this.player, e.weapon.bullets, function(player, bullet){
 				player.death(this, this.spawns[this.curSpawn].x, this.spawns[this.curSpawn].y);
@@ -148,11 +189,18 @@ SideScroller.Stage3.prototype = {
 		}, this);
 
 		//enemy death to player detection
+		this.game.physics.arcade.overlap(this.player.weapon.bullets, this.walkingEnemies, function(bullet, enemy) {
+			bullet.kill();
+			enemy.kill();
+			enemy.body.velocity.x = 0;
+			this.player.sfx_death.play();
+		}, null, this);
 		this.game.physics.arcade.overlap(this.player.weapon.bullets, this.shooterEnemies, function(bullet, enemy) {
 			bullet.kill();
 			enemy.destroy();
 			enemy.weapon.destroy();
-		});
+			this.player.sfx_death.play();
+		}, null, this);
 
 		//shooter enemies shoot at player
 		this.shooterEnemies.children.forEach(function(e){
@@ -198,11 +246,36 @@ SideScroller.Stage3.prototype = {
 		}, this);
 
 		//powerups
+		this.game.physics.arcade.overlap(this.player, this.powerups, function(a, b){
+			switch(b.name) {
+				case 'life':
+				var num_elems = this.lives_ind.children.length;
+				var ind = this.lives_ind.create(20 * (num_elems + 1) + 60 * num_elems, 20, 'hud_icons', 'life');
+				ind.fixedToCamera = true;
+				this.game.playerLives++;
+				break;
+
+				case 'shield':
+				this.shield_ind.frameName = 'shield_active';
+				this.player.shield = true;
+				break;
+
+				case 'burst':
+				this.burst_ind.frameName = 'burst_active';
+				this.player.fireRate = 100;
+				this.game.time.events.add(Phaser.Timer.SECOND * 5, function(){
+					this.burst_ind.frameName = 'burst_inactive';
+					this.player.fireRate = 850;
+				}, this);
+				break;
+			}
+			b.destroy();
+		}, null, this);
 
 		this.player.update();
+	},
 
-		if(this.control.pause.isDown) {
-			this.game.paused = true;
-		}
+	bulletSweepKill: function(sweeper, bullet) {
+		bullet.kill();
 	}
 };

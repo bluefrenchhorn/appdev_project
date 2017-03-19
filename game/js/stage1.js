@@ -90,8 +90,6 @@ SideScroller.Stage1.prototype = {
 		this.sweeper = new SideScroller.Blocker(this.game, -100, 0);
 		this.bulletBlock = new SideScroller.Blocker(this.game, this.game.camera.width, 0);
 
-		///////////////////////Object layer stuff////////////////////////////
-
 		var res = this.map.objects['objectLayer'][3];
 
 		this.winZone = new Phaser.Rectangle(res.x, res.y, res.width, res.height);
@@ -106,6 +104,7 @@ SideScroller.Stage1.prototype = {
 			sprite.body.setSize(element.width, element.height);
 		}, this);
 
+		//walking enemies
 		this.walkingEnemies = this.game.add.group();
 		this.walkingEnemies.createMultiple(20, 'enemy');
 		this.walkingEnemies.children.forEach(function(e){
@@ -149,8 +148,8 @@ SideScroller.Stage1.prototype = {
 
 		}.bind(this), 2000);
 
+		//water detection
 		this.water = this.map.createLayer('liquid');
-		/////////////////////////////End of Object layer stuff////////////////////////////////////
 
 		this.shooterEnemies = this.game.add.group();
 
@@ -173,7 +172,7 @@ SideScroller.Stage1.prototype = {
 			e.weapon.trackSprite(e, e.width/2, e.height/2);
 		}, this);
 
-		this.bgmusic = this.game.add.audio('backgroundmusic');
+		this.bgmusic = this.game.add.audio('music_stage1');
 		this.bgmusic.play();
 		this.sfx_powerup = this.game.add.audio('pickup');
 

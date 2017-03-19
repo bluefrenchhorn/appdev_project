@@ -83,18 +83,6 @@ SideScroller.Stage2.prototype = {
 	     	return true;           
 	    }, this, this.mid);
 
-		this.map.setTileIndexCallback([1, 2, 3], function(sprite) { 
-	    	if (this.collideFront == false && sprite == this.player) return false;
-	    	if (this.player.cursors.down.isDown && this.player.cursors.jump.isDown && sprite == this.player) {          
-	     		this.collideFront = false;
-	     		setTimeout(function(){
-	     			this.collideFront = true;
-	     		}.bind(this), 500);
-	     		return false;
-	     	}
-	     	return true;           
-	    }, this, this.front);
-
 		this.game.camera.follow(this.player, null);
 		this.game.camera.setPosition(this.spawns[this.curSpawn].x - 100, 0);
 		this.game.camera.deadzone = new Phaser.Rectangle(0, 0, this.game.camera.width/2, this.game.camera.height);
@@ -144,15 +132,8 @@ SideScroller.Stage2.prototype = {
 		}, this);
 
 		//bg music
-
-		this.control = this.game.input.keyboard.addKeys({
-			'pause': Phaser.KeyCode.P
-		});
-
-		this.game.input.keyboard.onDownCallback = function(event){
-			if(event.keyCode == Phaser.KeyCode.P && this.game.paused)
-				this.game.paused = false;
-		};
+		this.bgmusic = this.game.add.audio('music_stage2');
+		this.bgmusic.play();
 
 		//hud
 		this.lives_ind = this.game.add.group();
@@ -164,6 +145,7 @@ SideScroller.Stage2.prototype = {
 		this.shield_ind.fixedToCamera = true;
 		this.burst_ind = this.game.world.create(100, this.game.camera.height - 80, 'hud_icons', 'burst_inactive');
 		this.burst_ind.fixedToCamera = true;
+		
 		this.menu = new SideScroller.Menu(this, this.game, 2);
 	},
 
@@ -172,6 +154,7 @@ SideScroller.Stage2.prototype = {
 
 		//detect if player reached level end
 		if (this.winZone.contains(this.player.x + this.player.width/2, this.player.y + this.player.height/2)) {
+			this.bgmusic.stop();
 			this.state.start('Stage3');
 		}
 
@@ -288,16 +271,9 @@ SideScroller.Stage2.prototype = {
 		}, null, this);
 
 		this.player.update();
-
-		if(this.control.pause.isDown)
-			this.game.paused = true;
 	},
 
 	bulletSweepKill: function(sweeper, bullet) {
 		bullet.kill();
-	},
-
-	render: function() {	
-	//	this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
 	}
 };
