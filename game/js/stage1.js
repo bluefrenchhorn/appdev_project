@@ -242,14 +242,35 @@ SideScroller.Stage1.prototype = {
 		};
 
 		this.game.input.onDown.add(function(event){
-			if (this.game.paused && this.menu_resume.hitArea.contains(event.x, event.y)) {
-				this.game.paused = false;
-				this.menu_resume.visible = false;
-				this.menu_savenquit.visible = false;
-				this.menu_quit.visible = false;
-				this.menu_volume.visible = false;
-				this.menu_volume_up.visible = false;
-				this.menu_volume_down.visible = false;
+			if (this.game.paused) {
+				if (this.menu_resume.hitArea.contains(event.x, event.y)) {
+					this.game.paused = false;
+					this.menu_resume.visible = false;
+					this.menu_savenquit.visible = false;
+					this.menu_quit.visible = false;
+					this.menu_volume.visible = false;
+					this.menu_volume_up.visible = false;
+					this.menu_volume_down.visible = false;
+				} else if (this.menu_quit.hitArea.contains(event.x, event.y)) {
+					if (confirm('Are you sure you want to quit?')) {
+						window.location.replace("../index.php");
+					}
+				} else if (this.menu_savenquit.hitArea.contains(event.x, event.y)) {
+					if (confirm('Are you sure you want to save and quit?')) {
+						$.ajax({
+							url: '../game/savegame.php',
+							data: {
+								level: 1,
+								checkpoint: this.curSpawn,
+								lives: this.game.playerLives
+							},
+							method: 'post',
+							success: function(){
+								window.location.replace('../index.php');
+							}
+						});
+					}
+				}
 			}
 		}, this);
 	},

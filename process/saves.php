@@ -1,7 +1,7 @@
 <?php
 require("configDatabase.php");
 
-$result = mysqli_query($conn, "SELECT date_saved, level FROM saves WHERE player_id = '{$_POST['player_id']}'");
+$result = mysqli_query($conn, "SELECT save_id, date_saved, time_saved, level FROM saves WHERE player_id = '{$_POST['player_id']}'");
 
 $set = [];
 

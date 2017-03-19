@@ -19,6 +19,9 @@
 			.table-inverse {
 				color: #fff;
 			}
+			.table-inverse tr > *:nth-child(5){
+				display:none;
+			}
 			.table-inverse > tbody > tr > td, .table-inverse > tbody > tr > th {
 				border-top: 0px;
 			}
@@ -74,16 +77,7 @@
 					        </div>
 					        <div class="modal-body">
 					          	<table id="saves-table" class='table table-inverse'>
-					          		<thead>
-						          		<tr>
-						          			<th>Date & Time</th>
-						          			<th>Level</th>
-						          			<th class='col-sm-4'>Options</th>
-						          		</tr>
-						          	</thead>
-					          		<tbody>
-					          			
-					          		</tbody>
+					          		
 					          	</table>
 					        </div>
 					        <div class="modal-footer">
@@ -192,28 +186,35 @@
 	</body>
 </html>
 <script>
+	function refresh_saves() {
+		$("#saves-table").html("<thead><tr><th>Date</th><th>Time</th><th>Level</th><th class='col-sm-4'>Options</th><th></th></tr></thead><tbody></tbody>");
+		$.ajax({
+			url: 'process/saves.php',
+			method: 'post',
+			data: {
+				player_id: <?=$_SESSION['player_id']?>
+			},
+			dataType: 'json',
+			success: function(data){
+				if (data.length == 0) {
+					$("#saves-table").html("No save games found.");
+				}
+				for(var i = 0; i < data.length; i++) {
+					$("#saves-table > tbody").append("<tr><td>"+data[i].date_saved+"</td><td>" +data[i].time_saved+ "</td><td>Level "+data[i].level+"</td><td><button class='btn btn-warning'>Load</button> <button class='btn btn-danger delete-save'>Delete</button></td><td class='save_id'>"+data[i].save_id+"</td></tr>");
+				}
+				
+					
+			},
+		});
+	}
+
 	$( document ).ready(function(){
 		$(".mydiv").hide();
 		$(".mydiv").fadeIn(800);
 	});
 
 	$('#load-btn').on('click', function(){
-		$("#saves-table > tbody").html('');
-		$.ajax({
-			url: 'process/saves.php',
-			method: 'post',
-			data: {
-				player_id: 1
-			},
-			dataType: 'json',
-			success: function(data){
-				for(var i = 0; i < data.length; i++) {
-					$("#saves-table > tbody").append("<tr><td>"+data[i].date_saved+"</td><td>Level "+data[i].level+"</td><td><button class='btn btn-warning'>Load</button> <button class='btn btn-danger'>Delete</button></td></tr>");
-				}
-				
-					
-			},
-		});
+		refresh_saves();
 	});
 
 	$('#settings-btn').on('click', function(){
@@ -246,6 +247,23 @@
 				$("#settings_MOD").modal('hide');
 			},
 		});
+	});
+
+	$(".table-inverse").on('click', '.delete-save', function(){
+		if (confirm('Are you sure you want to delete this save?')) {
+			var id = $(this).parent().next().text();
+			$.ajax({
+				url: 'process/delete_save.php',
+				method: 'post',
+				data: {
+					save_id: id
+				},
+				success: function() {
+					refresh_saves();
+					alert('Save deleted!');
+				}
+			});
+		}
 	});
 </script>
 
