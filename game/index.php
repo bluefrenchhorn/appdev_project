@@ -142,6 +142,8 @@ SideScroller.Gameover.prototype = {
 		this.water = this.map.createLayer('water');
 
 		this.game.add.audio('gameoversfx').play();
+
+		this.menu = new SideScroller.Menu(this, this.game, 4);
 	},
 
 	update: function(){

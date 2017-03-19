@@ -249,7 +249,7 @@ SideScroller.Menu = function(context, game, level){
 					window.location.replace("../index.php");
 				}
 			} else if (this.menu_savenquit.hitArea.contains(event.x, event.y)) {
-				if (confirm('Are you sure you want to save and quit? You will be reset to the last checkpoint.')) {
+				if (level != 4 && confirm('Are you sure you want to save and quit? You will be reset to the last checkpoint.')) {
 					var save_data = {
 						level: this.level,
 						checkpoint: context.curSpawn,
@@ -264,6 +264,8 @@ SideScroller.Menu = function(context, game, level){
 							window.location.replace('../index.php');
 						}
 					});
+				} else if (confirm('Quit? You cannot save at the game over screen.')) {
+					window.location.replace("../index.php");
 				}
 			} else if (this.menu_volume_up.hitArea.contains(event.x, event.y)) {
 				var current = this.volume * 10;
