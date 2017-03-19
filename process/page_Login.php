@@ -6,23 +6,21 @@
 
 	$user = stripcslashes($user);
 	$pass = stripcslashes($pass);
-	$user = mysql_real_escape_string($user);
-	$pass = mysql_real_escape_string($pass);
 
-	mysql_connect("localhost","root","");
-	mysql_select_db("gamelog");
+	require("configDatabase.php");
 
 	$pass = md5($pass);
 
-	$result = mysql_query("select * from players where user_name = '$user' and user_pass = '$pass'") or die("Failed to query database ".mysql_error());
-	$row = mysql_fetch_array($result);
+	$result = mysqli_query($conn, "select * from players where user_name = '$user' and user_pass = '$pass'") or die("Failed to query database ".mysql_error());
+	$row = mysqli_fetch_assoc($result);
 	if($row['user_name'] == $user && $row['user_pass'] == $pass  && ("" !== $user || "" !== $pass)){
 		$_SESSION['player_id'] = $row['player_No'];
 		$_SESSION['user_name'] = $_POST['user_name'];
  		header("Location: ../index.php");
+ 		die();
 	}
 	else{
 		printf("Failed to Login");
-		header("Location: ../login.php");
+	//	header("Location: ../login.php");
 	}
 ?>
