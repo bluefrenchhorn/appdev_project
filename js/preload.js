@@ -25,6 +25,13 @@ SideScroller.Preload.prototype = {
 		this.load.image('bullet', 'assets/images/bullet.png');
 		this.load.image('enemybullet', 'assets/images/enemybullet.png');
 
+		//menu items
+		this.load.image('quit', 'assets/images/quit.png');
+		this.load.image('savenquit', 'assets/images/savenquit.png');
+		this.load.image('resume', 'assets/images/resume.png');
+		this.load.image('volumeup', 'assets/images/volume_up.png');
+		this.load.image('volumedown', 'assets/images/volume_down.png');
+
 		//sounds
 		this.load.audio('backgroundmusic', 'assets/audio/musicStage2.ogg');
 
@@ -32,6 +39,6 @@ SideScroller.Preload.prototype = {
 	},
 
 	create: function() {
-		this.state.start('Stage3');
+		this.state.start('Stage1');
 	}
 };

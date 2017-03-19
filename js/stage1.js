@@ -174,15 +174,6 @@ SideScroller.Stage1.prototype = {
 		this.bgmusic = this.game.add.audio('backgroundmusic');
 		this.bgmusic.play();
 
-		this.control = this.game.input.keyboard.addKeys({
-			'pause': Phaser.KeyCode.P
-		});
-
-		this.game.input.keyboard.onDownCallback = function(event){
-			if(event.keyCode == Phaser.KeyCode.P && this.game.paused)
-				this.game.paused = false;
-		};
-
 		//hud
 		this.lives_ind = this.game.add.group();
 		for(var i = 0; i < this.game.playerLives; i++) {
@@ -193,6 +184,74 @@ SideScroller.Stage1.prototype = {
 		this.shield_ind.fixedToCamera = true;
 		this.burst_ind = this.game.world.create(100, this.game.camera.height - 80, 'hud_icons', 'burst_inactive');
 		this.burst_ind.fixedToCamera = true;
+				/*
+		this.game.menu = this.game.add.group();
+
+		var graphics = this.game.add.graphics(0, 0);
+		graphics.lineStyle(0);
+		graphics.beginFill(0x121212, 0.7);
+		graphics.drawRect(0, 0, this.game.camera.width, this.game.camera.height);
+		graphics.fixedToCamera = true;
+		this.game.menu.add(graphics);
+
+		var menu_text = this.game.add.text(400, 100, 'Game is paused', { font: '19px Adobe Caslon Pro', fill: '#ffffff' });
+		menu_text.fixedToCamera = true;
+		this.game.menu.add(menu_text);
+		*/
+
+		this.menu_resume = this.game.add.button(100, 200, 'resume');
+		this.menu_resume.visible = false;
+		this.menu_resume.fixedToCamera = true;
+		this.menu_resume.hitArea = new Phaser.Rectangle(100, 200, 250, 50);
+
+		this.menu_savenquit = this.game.add.button(100, 270, 'savenquit');
+		this.menu_savenquit.visible = false;
+		this.menu_savenquit.fixedToCamera = true;
+		this.menu_savenquit.hitArea = new Phaser.Rectangle(100, 270, 350, 50);
+
+		this.menu_quit = this.game.add.button(100, 340, 'quit');
+		this.menu_quit.visible = false;
+		this.menu_quit.fixedToCamera = true;
+		this.menu_quit.hitArea = new Phaser.Rectangle(100, 340, 140, 50);
+
+		this.menu_volume = this.game.add.text(120, 500, "Volume: 10", {fill: '#fff'});
+		this.menu_volume.visible = false;
+		this.menu_volume.fixedToCamera = true;
+
+		this.menu_volume_up = this.game.add.button(270, 477, 'volumeup');
+		this.menu_volume_up.visible = false;
+		this.menu_volume_up.fixedToCamera = true;
+		this.menu_volume_up.hitArea = new Phaser.Rectangle(270, 477, 100, 80);
+
+		this.menu_volume_down = this.game.add.button(360, 495, 'volumedown');
+		this.menu_volume_down.visible = false;
+		this.menu_volume_down.fixedToCamera = true;
+		this.menu_volume_down.hitArea = new Phaser.Rectangle(360, 495, 100, 80);
+
+		this.game.input.keyboard.callbackContext = this;
+		this.game.input.keyboard.onUpCallback = function(event) {
+			if(event.keyCode == Phaser.KeyCode.ESC) {
+				this.game.paused = true;
+				this.menu_resume.visible = true;
+				this.menu_savenquit.visible = true;
+				this.menu_quit.visible = true;
+				this.menu_volume.visible = true;
+				this.menu_volume_up.visible = true;
+				this.menu_volume_down.visible = true;
+			}
+		};
+
+		this.game.input.onDown.add(function(event){
+			if (this.game.paused && this.menu_resume.hitArea.contains(event.x, event.y)) {
+				this.game.paused = false;
+				this.menu_resume.visible = false;
+				this.menu_savenquit.visible = false;
+				this.menu_quit.visible = false;
+				this.menu_volume.visible = false;
+				this.menu_volume_up.visible = false;
+				this.menu_volume_down.visible = false;
+			}
+		}, this);
 	},
 
 	update: function() {
@@ -341,9 +400,6 @@ SideScroller.Stage1.prototype = {
 		}, null, this);
 
 		this.player.update();
-
-		if(this.control.pause.isDown)
-			this.game.paused = true;
 	},
 	
 	render: function() {	
