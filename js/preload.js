@@ -6,6 +6,7 @@ SideScroller.Preload.prototype = {
 	preload: function() {
 		this.load.tilemap('level1', 'assets/stage1.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level2', 'assets/stage2.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('gameover', 'assets/gameover.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.image('gameTiles', 'assets/platformertiles.png');
 		this.load.image('jungleTiles', 'assets/jungle.png');
 		this.load.image('scifiTiles', 'assets/scifi_platformTiles_32x32.png');
@@ -24,6 +25,6 @@ SideScroller.Preload.prototype = {
 	},
 
 	create: function() {
-		this.state.start('Stage2');
+		this.state.start('Gameover');
 	}
 };

@@ -59,7 +59,31 @@ SideScroller.Gameover = function(){};
 
 SideScroller.Gameover.prototype = {
 	create: function(){
-		this.game.add.text(50, 50, "u fucking lost!!", {font: '30px Comic Sans MS', fill: '#fff'});
+		this.map = this.game.add.tilemap('gameover');
+		this.map.addTilesetImage('platformertiles', 'gameTiles');
+		this.map.addTilesetImage('scifi_platformTiles_32x32', 'scifiTiles');
+		this.map.addTilesetImage('Jungle_terrain (1)', 'jungleTiles');
+
+		this.background = this.map.createLayer('bg');
+		this.stars = this.map.createLayer('stars');
+		this.text = this.map.createLayer('text');
+		this.platform = this.map.createLayer('platform');	
+
+		this.background.resizeWorld();
+
+		this.player = new SideScroller.Player(this.game, 224, 0);
+
+		this.game.camera.follow(this.player);
+
+		this.map.setCollisionBetween(1, 24, true, 'platform');
+		this.map.setCollisionBetween(1, 10000, true, 'text');
+
+		this.water = this.map.createLayer('water');
+	},
+
+	update: function(){
+		this.game.physics.arcade.collide(this.player, this.platform);
+		this.game.physics.arcade.collide(this.player, this.text);
 	}
 };
 

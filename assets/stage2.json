@@ -309,6 +309,17 @@
                  "y":130
                 }, 
                 {
+                 "height":59,
+                 "id":35,
+                 "name":"",
+                 "rotation":0,
+                 "type":"endPoint",
+                 "visible":true,
+                 "width":64,
+                 "x":9520,
+                 "y":308
+                }, 
+                {
                  "gid":1480,
                  "height":32,
                  "id":29,
@@ -375,7 +386,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":35,
+ "nextobjectid":36,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
