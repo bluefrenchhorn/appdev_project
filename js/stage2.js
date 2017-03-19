@@ -101,12 +101,14 @@ SideScroller.Stage2.prototype = {
 		this.sweeper = new SideScroller.Blocker(this.game, -100, 0);
 		this.bulletBlock = new SideScroller.Blocker(this.game, this.game.camera.width, 0);
 
-		//winzone code here
+		//winzone
+		var result = SideScroller.findObjectsByType('endPoint', this.map, 'obj')[0];
+		this.winZone = new Phaser.Rectangle(result.x, result.y, result.width, result.height);
 
 		this.waterDetection = this.game.add.group();
 		this.waterDetection.enableBody = true;
 
-		var result = SideScroller.findObjectsByType('water', this.map, 'obj');
+		result = SideScroller.findObjectsByType('water', this.map, 'obj');
 
 		result.forEach(function(element){
 			var sprite = this.waterDetection.create(element.x, element.y, element.id);
@@ -163,7 +165,10 @@ SideScroller.Stage2.prototype = {
 	},
 
 	update: function() {
-		//level end detection here
+		//detect if player reached level end
+		if (this.winZone.contains(this.player.x + this.player.width/2, this.player.y + this.player.height/2)) {
+			this.state.start('Stage3');
+		}
 
 		//platform collisions
 		this.game.physics.arcade.collide(this.player, this.back);

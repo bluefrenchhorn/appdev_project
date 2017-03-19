@@ -92,6 +92,6 @@
  </layer>
  <objectgroup name="obj">
   <object id="1" type="playerSpawn" x="3" y="262" width="90" height="94"/>
-  <object id="2" type="playerSpawn" x="19106.7" y="262.667" width="90.6667" height="93.3333"/>
+  <object id="2" type="endPoint" x="19106.7" y="262.667" width="90.6667" height="93.3333"/>
  </objectgroup>
 </map>

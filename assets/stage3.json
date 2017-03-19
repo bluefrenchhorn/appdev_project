@@ -45,7 +45,7 @@
                  "id":2,
                  "name":"",
                  "rotation":0,
-                 "type":"playerSpawn",
+                 "type":"endPoint",
                  "visible":true,
                  "width":90.6667,
                  "x":19106.7,

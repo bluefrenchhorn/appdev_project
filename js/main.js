@@ -92,6 +92,7 @@ SideScroller.game.state.add('Boot', SideScroller.Boot);
 SideScroller.game.state.add('Preload', SideScroller.Preload);
 SideScroller.game.state.add('Stage1', SideScroller.Stage1);
 SideScroller.game.state.add('Stage2', SideScroller.Stage2);
+SideScroller.game.state.add('Stage3', SideScroller.Stage3);
 SideScroller.game.state.add('Gameover', SideScroller.Gameover);
 
 SideScroller.game.state.start('Boot');

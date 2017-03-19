@@ -4,13 +4,19 @@ SideScroller.Preload = function(){};
 
 SideScroller.Preload.prototype = {
 	preload: function() {
+		//tilemaps
 		this.load.tilemap('level1', 'assets/stage1.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('level2', 'assets/stage2.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level3', 'assets/stage3.json', null, Phaser.Tilemap.TILED_JSON);
 		this.load.tilemap('gameover', 'assets/gameover.json', null, Phaser.Tilemap.TILED_JSON);
+
+		//tilesets
 		this.load.image('gameTiles', 'assets/platformertiles.png');
 		this.load.image('jungleTiles', 'assets/jungle.png');
 		this.load.image('scifiTiles', 'assets/scifi_platformTiles_32x32.png');
 		this.load.image('caveTiles', 'assets/platformertiles_redone.png');
+
+		//spritesheets
 		this.load.spritesheet('powerup', 'assets/powerup.png', 32, 32);
 		this.load.atlas('player', 'assets/spritesheet.png', 'assets/sprites.json');
 		this.load.atlas('tank', 'assets/tank.png', 'assets/tank.json');
@@ -19,12 +25,14 @@ SideScroller.Preload.prototype = {
 		this.load.atlas('hud_icons', 'assets/hud_icons.png', 'assets/hud_icons.json');
 		this.load.image('bullet', 'assets/bullet.png');
 		this.load.image('enemybullet', 'assets/enemybullet.png');
+
+		//sounds
 		this.load.audio('backgroundmusic', 'assets/musicStage2.ogg');
 
 		this.game.playerLives = 3;
 	},
 
 	create: function() {
-		this.state.start('Gameover');
+		this.state.start('Stage3');
 	}
 };
