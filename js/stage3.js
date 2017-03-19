@@ -18,6 +18,14 @@ SideScroller.Stage3.prototype = {
 
 		//collisions
 		this.map.setCollisionBetween(246, 252, true, 'front');
+		this.map.setCollision(179, true, 'front');
+
+		SideScroller.setTileCollision(this.front, 179, {
+			top: true,
+			bottom: false,
+			left: false,
+			right: false
+		});
 
 		//powerups
 
