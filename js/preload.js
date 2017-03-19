@@ -5,29 +5,28 @@ SideScroller.Preload = function(){};
 SideScroller.Preload.prototype = {
 	preload: function() {
 		//tilemaps
-		this.load.tilemap('level1', 'assets/stage1.json', null, Phaser.Tilemap.TILED_JSON);
-		this.load.tilemap('level2', 'assets/stage2.json', null, Phaser.Tilemap.TILED_JSON);
-		this.load.tilemap('level3', 'assets/stage3.json', null, Phaser.Tilemap.TILED_JSON);
-		this.load.tilemap('gameover', 'assets/gameover.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level1', 'assets/tilemaps/stage1.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level2', 'assets/tilemaps/stage2.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('level3', 'assets/tilemaps/stage3.json', null, Phaser.Tilemap.TILED_JSON);
+		this.load.tilemap('gameover', 'assets/tilemaps/gameover.json', null, Phaser.Tilemap.TILED_JSON);
 
 		//tilesets
-		this.load.image('gameTiles', 'assets/platformertiles.png');
-		this.load.image('jungleTiles', 'assets/jungle.png');
-		this.load.image('scifiTiles', 'assets/scifi_platformTiles_32x32.png');
-		this.load.image('caveTiles', 'assets/platformertiles_redone.png');
+		this.load.image('gameTiles', 'assets/images/platformertiles.png');
+		this.load.image('jungleTiles', 'assets/images/jungle.png');
+		this.load.image('scifiTiles', 'assets/images/scifi_platformTiles_32x32.png');
+		this.load.image('caveTiles', 'assets/images/platformertiles_redone.png');
 
 		//spritesheets
-		this.load.spritesheet('powerup', 'assets/powerup.png', 32, 32);
-		this.load.atlas('player', 'assets/spritesheet.png', 'assets/sprites.json');
-		this.load.atlas('tank', 'assets/tank.png', 'assets/tank.json');
-		this.load.atlas('enemy', 'assets/enemy.png', 'assets/enemy.json');
-		this.load.atlas('enemy_shoot', 'assets/enemy.png', 'assets/enemy_shoot.json');
-		this.load.atlas('hud_icons', 'assets/hud_icons.png', 'assets/hud_icons.json');
-		this.load.image('bullet', 'assets/bullet.png');
-		this.load.image('enemybullet', 'assets/enemybullet.png');
+		this.load.spritesheet('powerup', 'assets/images/powerup.png', 32, 32);
+		this.load.atlas('player', 'assets/images/spritesheet.png', 'assets/atlas/sprites.json');
+		this.load.atlas('enemy', 'assets/images/enemy.png', 'assets/atlas/enemy.json');
+		this.load.atlas('enemy_shoot', 'assets/images/enemy.png', 'assets/atlas/enemy_shoot.json');
+		this.load.atlas('hud_icons', 'assets/images/hud_icons.png', 'assets/atlas/hud_icons.json');
+		this.load.image('bullet', 'assets/images/bullet.png');
+		this.load.image('enemybullet', 'assets/images/enemybullet.png');
 
 		//sounds
-		this.load.audio('backgroundmusic', 'assets/musicStage2.ogg');
+		this.load.audio('backgroundmusic', 'assets/audio/musicStage2.ogg');
 
 		this.game.playerLives = 3;
 	},
