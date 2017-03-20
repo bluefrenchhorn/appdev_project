@@ -134,10 +134,13 @@ SideScroller.Stage3.prototype = {
 		}, this);
 
 		this.labcomp = this.game.add.sprite(this.winZone.x - 400, 224, 'comp');
+		this.game.physics.arcade.enable(this.labcomp);
+		this.labcomp.hitpoints = 15;
 
 		//bg music
 		this.bgmusic = this.game.add.audio('music_stage3');
 		this.bgmusic.play();
+		this.sfx_powerup = this.game.add.audio('pickup');
 
 		//hud
 		this.lives_ind = this.game.add.group();
@@ -157,7 +160,7 @@ SideScroller.Stage3.prototype = {
 		this.game.sound.volume = this.menu.volume;
 
 		//detect if player reached level end
-		if (this.winZone.contains(this.player.x + this.player.width/2, this.player.y + this.player.height/2)) {
+		if (!this.labcomp.alive && this.winZone.contains(this.player.x + this.player.width/2, this.player.y + this.player.height/2)) {
 			this.bgmusic.stop();
 			this.state.start('Gameover');
 			//(TODO): add condition to make sure computer is destroyed
@@ -263,6 +266,7 @@ SideScroller.Stage3.prototype = {
 
 		//powerups
 		this.game.physics.arcade.overlap(this.player, this.powerups, function(a, b){
+			this.sfx_powerup.play();
 			switch(b.name) {
 				case 'life':
 				var num_elems = this.lives_ind.children.length;
@@ -286,6 +290,15 @@ SideScroller.Stage3.prototype = {
 				break;
 			}
 			b.destroy();
+		}, null, this);
+
+		this.game.physics.arcade.overlap(this.player.weapon.bullets, this.labcomp, function(labcomp, bullet){
+			bullet.kill();
+			this.player.sfx_death.play();
+			labcomp.hitpoints--;
+			if (labcomp.hitpoints == 0) {
+				labcomp.kill();
+			}
 		}, null, this);
 
 		this.player.update();

@@ -629,15 +629,15 @@
                  "y":2.66666666666666
                 }, 
                 {
-                 "height":633.333333333333,
+                 "height":662.666666666667,
                  "id":63,
                  "name":"",
                  "rotation":0,
                  "type":"noSpawn",
                  "visible":true,
-                 "width":1033.33333333333,
+                 "width":1117.83333333333,
                  "x":18164,
-                 "y":2.66666666666667
+                 "y":-10.6666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -646,7 +646,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":64,
+ "nextobjectid":65,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

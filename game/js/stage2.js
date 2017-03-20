@@ -134,6 +134,7 @@ SideScroller.Stage2.prototype = {
 		//bg music
 		this.bgmusic = this.game.add.audio('music_stage2');
 		this.bgmusic.play();
+		this.sfx_powerup = this.game.add.audio('pickup');
 
 		//hud
 		this.lives_ind = this.game.add.group();
@@ -145,7 +146,7 @@ SideScroller.Stage2.prototype = {
 		this.shield_ind.fixedToCamera = true;
 		this.burst_ind = this.game.world.create(100, this.game.camera.height - 80, 'hud_icons', 'burst_inactive');
 		this.burst_ind.fixedToCamera = true;
-		
+
 		this.menu = new SideScroller.Menu(this, this.game, 2);
 	},
 
@@ -199,7 +200,8 @@ SideScroller.Stage2.prototype = {
 			bullet.kill();
 			enemy.destroy();
 			enemy.weapon.destroy();
-		});
+			this.player.sfx_death.play();
+		}, null, this);
 
 		//shooter enemies shoot at player
 		this.shooterEnemies.children.forEach(function(e){
@@ -245,6 +247,7 @@ SideScroller.Stage2.prototype = {
 		}, this);
 
 		this.game.physics.arcade.overlap(this.player, this.powerups, function(a, b){
+			this.sfx_powerup.play();
 			switch(b.name) {
 				case 'life':
 				var num_elems = this.lives_ind.children.length;
