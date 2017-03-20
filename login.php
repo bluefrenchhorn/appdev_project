@@ -6,6 +6,11 @@
 		<link rel="stylesheet" type="text/css" href="css/baseStyle.css">
 		<script src="js/jquery.js"></script>
   		<script src="js/bootstrap.js"></script>
+  		<style type="text/css">
+  			.space {
+  				height: 20px;
+  			}
+  		</style>
 	</head>
 	<body>
 		<?php 
@@ -38,7 +43,7 @@
 								<input class="form-control password" type="password" placeholder="Password" name="user_pass">
 							</div>
 							<input type="submit" class="btn btn-success">
-
+							<div class='space'></div>
 							<div class='alert alert-danger alert1' role='alert'>Incorrect username or password.</div>
 							<div class='alert alert-danger alert2' role='alert'>Failed to log in.</div>
 
@@ -53,8 +58,8 @@
 								<input class="form-control password" type="password" placeholder="Password" name="user_pass" required='required'>
 							</div>
 							<input type="submit" class="btn btn-success">
-
-							<div class='alert alert-danger alert1' role='alert'>Registered! You may now log in.</div>
+							<div class='space'></div>
+							<div class='alert alert-success alert1' role='alert'>Registered! You may now log in.</div>
 							<div class='alert alert-danger alert2' role='alert'>Username already taken.</div>
 							<div class='alert alert-danger alert3' role='alert'>Could not register.</div>
 
