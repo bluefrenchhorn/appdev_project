@@ -127,25 +127,26 @@
 					        <div class="modal-body">
 					        	<div class='row'>
 					        		<form class='col-xs-6 col-xs-offset-3'>
+
 					        			<div class='form-group'>
 					        				<label>Left</label>
-						        			<input type="text" name="" class='form-control' id="leftkey">
+						        			<input type="text" name="" class='form-control' id="leftkey" required='required'>
 					        			</div>
 						        		<div class='form-group'>
 							        		<label>Duck</label>
-							        		<input type="text" name="" class='form-control' id="duckkey">
+							        		<input type="text" name="" class='form-control' id="duckkey" required='required'>
 							        	</div>
 							        	<div class='form-group'>
 							        		<label>Right</label>
-							        		<input type="text" name="" class='form-control'id="rightkey">
+							        		<input type="text" name="" class='form-control'id="rightkey" required='required'>
 							        	</div>
 							        	<div class='form-group'>
 							        		<label>Jump</label>
-							        		<input type="text" name="" class='form-control'id="jumpkey">
+							        		<input type="text" name="" class='form-control'id="jumpkey" required='required'>
 							        	</div>
 							        	<div class='form-group'>
 							        		<label>Shoot</label>
-							        		<input type="text" name="" class='form-control'id="shootkey">
+							        		<input type="text" name="" class='form-control'id="shootkey" required='required'>
 							        	</div>
 							        	<div class='form-group'>
 							        		<button class='btn btn-success' type='button' id='control-submit'>
@@ -155,7 +156,9 @@
 							        	</div>
 						        	</form>
 					        	</div>
-				
+								<div class='alert alert-danger alert1' role='alert'>Controls must be letters.</div>
+								<div class='alert alert-danger alert2' role='alert'>Please enter a single character.</div>
+								<div class='alert alert-danger alert3' role='alert'>Controls must be unique.</div>
 					        </div>
 					        <div class="modal-footer">
 					          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -211,6 +214,7 @@
 	$( document ).ready(function(){
 		$(".mydiv").hide();
 		$(".mydiv").fadeIn(800);
+		$("#settings_MOD").find('.alert').hide();
 	});
 
 	$('#load-btn').on('click', function(){
@@ -233,20 +237,55 @@
 	});
 
 	$('#control-submit').on('click', function(){
-		$.ajax({
-			url: 'process/set_controls.php',
-			method: 'post',
-			data: {
-				left: $("#leftkey").val(),
-				duck: $("#duckkey").val(),
-				right: $("#rightkey").val(),
-				shoot: $("#shootkey").val(),
-				jump: $("#jumpkey").val()
-			},
-			success: function(data){
-				$("#settings_MOD").modal('hide');
-			},
+		$("#settings_MOD").find('.alert').hide();
+		var error_flag = false;
+		$("#settings_MOD").find('input').each(function(){
+			if ($(this).val().length != 1) {
+				$("#settings_MOD").find('.alert2').show();
+				$(this).addClass('too-many');
+				error_flag = true;
+			} else {
+				var first = $(this).val().charAt(0);
+				first.toUpperCase();
+				if (!first.match(/^[a-zA-Z]+$/)) {
+					$(this).addClass('not-a-match');
+					$("#settings_MOD").find('.alert1').show();
+					error_flag = true;
+				}
+			}
 		});
+		if (error_flag == false) {
+			var arr = [];
+			$("#settings_MOD").find('input').each(function(){
+				arr.push($(this).val());
+			});
+			var unique = arr.filter(onlyUnique);
+			if (unique.length < 5) {
+				error_flag = true;
+				$("#settings_MOD").find('.alert3').show();
+			}
+		}
+		if (error_flag == false) {
+			$("#leftkey").val($("#leftkey").val().toUpperCase());
+			$("#duckkey").val($("#duckkey").val().toUpperCase());
+			$("#rightkey").val($("#rightkey").val().toUpperCase());
+			$("#shootkey").val($("#shootkey").val().toUpperCase());
+			$("#jumpkey").val($("#jumpkey").val().toUpperCase());
+			$.ajax({
+				url: 'process/set_controls.php',
+				method: 'post',
+				data: {
+					left: $("#leftkey").val(),
+					duck: $("#duckkey").val(),
+					right: $("#rightkey").val(),
+					shoot: $("#shootkey").val(),
+					jump: $("#jumpkey").val()
+				},
+				success: function(data){
+					$("#settings_MOD").modal('hide');
+				},
+			});
+		}
 	});
 
 	$(".table-inverse").on('click', '.delete-save', function(){
@@ -271,5 +310,9 @@
 		$('body').append("<form id='load' method='POST' action='game/index.php'><input type='hidden' name='save_id' value='"+id+"'></form>");
 		$('#load').submit();
 	});
+
+	function onlyUnique(value, index, self) { 
+		return self.indexOf(value) === index;
+	}
 </script>
 

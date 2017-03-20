@@ -32,23 +32,26 @@
 					<form action="process/page_Login.php" method="POST">
 						<div class="Login text-center">
 							<div class='form-group'>
-								<input class="form-control" type="text" placeholder="Username" name="user_name">
+								<input class="form-control username" type="text" placeholder="Username" name="user_name">
 							</div>
 							<div class='form-group'>
-								<input class="form-control" type="password" placeholder="Password" name="user_pass">
+								<input class="form-control password" type="password" placeholder="Password" name="user_pass">
 							</div>
 							<input type="submit" class="btn btn-success">
 						</div>
 					</form>
-					<form action="process/page_Register.php" method="POST">
+					<form id='register-form'>
 						<div class="Register hidden text-center">
 							<div class='form-group'>
-								<input class="form-control" type="text" placeholder="Username" name="user_name">
+								<input class="form-control username" type="text" placeholder="Username" name="user_name">
 							</div>
 							<div class='form-group'>
-								<input class="form-control" type="password" placeholder="Password" name="user_pass">
+								<input class="form-control password" type="password" placeholder="Password" name="user_pass">
 							</div>
 							<input type="submit" class="btn btn-success">
+							<div class='alert alert-danger alert1' role='alert'>Registered! You may now log in.</div>
+							<div class='alert alert-danger alert2' role='alert'>Username already taken.</div>
+							<div class='alert alert-danger alert3' role='alert'>Could not register.</div>
 						</div>
 					</form>
 				</div>
@@ -59,6 +62,7 @@
 <script src="jquery.js"></script>
 <script>
 	$(document).ready(function(){
+		$("#register-form").find('.alert').hide();
 		$("#login").addClass("active");
 		$(".mydiv").hide();
 		$(".mydiv").fadeIn(800);
@@ -84,5 +88,27 @@
 
 	 	});
 
+
+	 	$("#register-form").on('submit', function(){
+	 		$("#register-form").find('.alert').hide();
+	 		$.ajax({
+	 			url: 'process/page_Register.php',
+	 			method: 'post',
+	 			data: {
+	 				user_name: $(this).find('.username').val();
+	 				user_pass: $(this).find('.password').val();
+	 			},
+	 			dataType: 'json',
+	 			success: function(data) {
+	 				if (data.success == 0) {
+	 					$("#register-form").find('.alert1').show();
+	 				} else if (data.success == 1) {
+	 					$("#register-form").find('.alert2').show();
+	 				} else {
+	 					$("#register-form").find('.alert3').show();
+	 				}
+	 			}
+	 		});
+	 	});
 	});
 </script>

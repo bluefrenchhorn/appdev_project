@@ -1,19 +1,20 @@
 <?php
-	if(isset($_POST)){
-		require("configDatabase.php"); 
+	require("configDatabase.php"); 
+	$success = array(
+		'success' => 0
+	);
+	if(isset($_POST['user_name'])){
+		$query = mysqli_query($conn, "SELECT * FROM players WHERE user_name = '{$_POST['user_name']}'");
+
+		if (mysqli_num_rows($query) > 0) {
+			$success['success'] = 1; // username taken
+		}
+
 		$query = "INSERT INTO players (user_name, user_pass, leftkey, rightkey, duckkey, jumpkey, shootkey)
 		VALUES('".$_POST['user_name']."', '".md5($_POST['user_pass'])."', 'A', 'D', 'S', 'J', 'K');";
-		if ( ($result = $conn->query($query))===false )
-		{
-		  printf("Invalid query: %s\nWhole query: %s\n", $conn->error, $query);
-		  /*
-		  header("Location: ../index.php?flag=0");
-		  die();
-		  */
-		}else{
-		  
-	      header("Location: ../index.php?flag=1");
-		  die();
+		$result = $conn->query($query);
+		if ($result == false) {
+			$success['success'] = 2; // error inserting user
 		}
 	}
-?>
+	echo json_encode($success);
