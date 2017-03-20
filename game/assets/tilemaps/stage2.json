@@ -320,18 +320,6 @@
                  "y":308
                 }, 
                 {
-                 "gid":1480,
-                 "height":32,
-                 "id":29,
-                 "name":"collect",
-                 "rotation":0,
-                 "type":"powerup",
-                 "visible":true,
-                 "width":32,
-                 "x":688.121,
-                 "y":564.485
-                }, 
-                {
                  "gid":1376,
                  "height":32,
                  "id":30,
@@ -366,18 +354,6 @@
                  "width":32,
                  "x":5086.67,
                  "y":561.333
-                }, 
-                {
-                 "gid":1480,
-                 "height":32,
-                 "id":34,
-                 "name":"collect",
-                 "rotation":0,
-                 "type":"powerup",
-                 "visible":true,
-                 "width":32,
-                 "x":4368.121,
-                 "y":494.485
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -394,7 +370,7 @@
         {
          "columns":8,
          "firstgid":1,
-         "image":"platformertiles.png",
+         "image":"..\/images\/platformertiles.png",
          "imageheight":96,
          "imagewidth":256,
          "margin":0,
@@ -407,7 +383,7 @@
         {
          "columns":35,
          "firstgid":25,
-         "image":"scifi_platformTiles_32x32.png",
+         "image":"..\/images\/scifi_platformTiles_32x32.png",
          "imageheight":736,
          "imagewidth":1120,
          "margin":0,
@@ -420,7 +396,7 @@
         {
          "columns":28,
          "firstgid":830,
-         "image":"jungle.png",
+         "image":"..\/images\/jungle.png",
          "imageheight":480,
          "imagewidth":896,
          "margin":0,
@@ -433,7 +409,7 @@
         {
          "columns":8,
          "firstgid":1250,
-         "image":"platformertiles_redone.png",
+         "image":"..\/images\/platformertiles_redone.png",
          "imageheight":96,
          "imagewidth":256,
          "margin":0,
@@ -446,7 +422,7 @@
         {
          "columns":20,
          "firstgid":1274,
-         "image":"powerup.png",
+         "image":"..\/images\/powerup.png",
          "imageheight":384,
          "imagewidth":640,
          "margin":0,

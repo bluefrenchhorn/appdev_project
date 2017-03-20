@@ -363,20 +363,8 @@
                  "type":"powerup",
                  "visible":true,
                  "width":32,
-                 "x":3512,
-                 "y":334
-                }, 
-                {
-                 "gid":1071,
-                 "height":32,
-                 "id":96,
-                 "name":"collect",
-                 "rotation":0,
-                 "type":"powerup",
-                 "visible":true,
-                 "width":32,
-                 "x":620,
-                 "y":404
+                 "x":3515.81818181818,
+                 "y":344
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -393,7 +381,7 @@
         {
          "columns":8,
          "firstgid":1,
-         "image":"platformertiles.png",
+         "image":"..\/images\/platformertiles.png",
          "imageheight":96,
          "imagewidth":256,
          "margin":0,
@@ -897,7 +885,7 @@
         {
          "columns":28,
          "firstgid":25,
-         "image":"jungle.png",
+         "image":"..\/images\/jungle.png",
          "imageheight":480,
          "imagewidth":896,
          "margin":0,
@@ -925,7 +913,7 @@
         {
          "columns":28,
          "firstgid":445,
-         "image":"jungle.png",
+         "image":"..\/images\/jungle.png",
          "imageheight":480,
          "imagewidth":896,
          "margin":0,
@@ -938,7 +926,7 @@
         {
          "columns":20,
          "firstgid":865,
-         "image":"powerup.png",
+         "image":"..\/images\/powerup.png",
          "imageheight":384,
          "imagewidth":640,
          "margin":0,

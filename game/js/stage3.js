@@ -136,6 +136,7 @@ SideScroller.Stage3.prototype = {
 		this.labcomp = this.game.add.sprite(this.winZone.x - 400, 224, 'comp');
 		this.game.physics.arcade.enable(this.labcomp);
 		this.labcomp.hitpoints = 15;
+		this.labcomp.body.immovable = true;
 
 		//bg music
 		this.bgmusic = this.game.add.audio('music_stage3');
@@ -170,6 +171,8 @@ SideScroller.Stage3.prototype = {
 		this.game.physics.arcade.collide(this.player, this.front);
 		this.game.physics.arcade.collide(this.shooterEnemies, this.front);
 		this.game.physics.arcade.collide(this.walkingEnemies, this.front);
+
+		this.game.physics.arcade.collide(this.player, this.labcomp);
 
 		//update player spawn location
 		if (this.curSpawn + 1 < this.spawns.length && this.player.x > this.spawns[this.curSpawn+1].x)

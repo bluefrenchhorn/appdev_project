@@ -257,7 +257,7 @@
 		if (error_flag == false) {
 			var arr = [];
 			$("#settings_MOD").find('input').each(function(){
-				arr.push($(this).val());
+				arr.push($(this).val().toUpperCase());
 			});
 			var unique = arr.filter(onlyUnique);
 			if (unique.length < 5) {

@@ -264,7 +264,8 @@ SideScroller.Menu = function(context, game, level){
 							window.location.replace('../index.php');
 						}
 					});
-				} else if (confirm('Quit? You cannot save at the game over screen.')) {
+				}
+				if (level == 4 && confirm('Quit? You cannot save at the game over screen.')) {
 					window.location.replace("../index.php");
 				}
 			} else if (this.menu_volume_up.hitArea.contains(event.x, event.y)) {
