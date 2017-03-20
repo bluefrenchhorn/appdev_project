@@ -9,18 +9,23 @@
 
 	require("configDatabase.php");
 
+	$success = array(
+		'success' => 0
+	);
+
 	$pass = md5($pass);
 
-	$result = mysqli_query($conn, "select * from players where user_name = '$user' and user_pass = '$pass'") or die("Failed to query database ".mysql_error());
-	$row = mysqli_fetch_assoc($result);
-	if($row['user_name'] == $user && $row['user_pass'] == $pass  && ("" !== $user || "" !== $pass)){
+	$result = mysqli_query($conn, "select * from players where user_name = '$user' and user_pass = '$pass'");
+
+	if ($result == false) {
+		$success['success'] = 2; // failed to log in
+	} else if (mysqli_num_rows($result) != 1) {
+		$success['success'] = 1; // incorrect username or password
+	} else {
+		//successful login
+		$row = mysqli_fetch_assoc($result);
 		$_SESSION['player_id'] = $row['player_No'];
-		$_SESSION['user_name'] = $_POST['user_name'];
- 		header("Location: ../index.php");
- 		die();
+		$_SESSION['user_name'] = $row['user_name'];
 	}
-	else{
-		printf("Failed to Login");
-	//	header("Location: ../login.php");
-	}
-?>
+
+	echo json_encode($success);

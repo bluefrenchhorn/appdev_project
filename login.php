@@ -29,7 +29,7 @@
 				  </div>
 				</nav>
 				<div class="inpt">
-					<form action="process/page_Login.php" method="POST">
+					<form id='login-form'>
 						<div class="Login text-center">
 							<div class='form-group'>
 								<input class="form-control username" type="text" placeholder="Username" name="user_name">
@@ -38,20 +38,26 @@
 								<input class="form-control password" type="password" placeholder="Password" name="user_pass">
 							</div>
 							<input type="submit" class="btn btn-success">
+
+							<div class='alert alert-danger alert1' role='alert'>Incorrect username or password.</div>
+							<div class='alert alert-danger alert2' role='alert'>Failed to log in.</div>
+
 						</div>
 					</form>
 					<form id='register-form'>
 						<div class="Register hidden text-center">
 							<div class='form-group'>
-								<input class="form-control username" type="text" placeholder="Username" name="user_name">
+								<input class="form-control username" type="text" placeholder="Username" name="user_name" required='required'>
 							</div>
 							<div class='form-group'>
-								<input class="form-control password" type="password" placeholder="Password" name="user_pass">
+								<input class="form-control password" type="password" placeholder="Password" name="user_pass" required='required'>
 							</div>
 							<input type="submit" class="btn btn-success">
+
 							<div class='alert alert-danger alert1' role='alert'>Registered! You may now log in.</div>
 							<div class='alert alert-danger alert2' role='alert'>Username already taken.</div>
 							<div class='alert alert-danger alert3' role='alert'>Could not register.</div>
+
 						</div>
 					</form>
 				</div>
@@ -59,15 +65,17 @@
 		</div>
 	</body>
 </html>
-<script src="jquery.js"></script>
+<script src="js/jquery.js"></script>
 <script>
 	$(document).ready(function(){
 		$("#register-form").find('.alert').hide();
+		$("#login-form").find('.alert').hide();
 		$("#login").addClass("active");
 		$(".mydiv").hide();
 		$(".mydiv").fadeIn(800);
 
 	 	$("#register").click(function() {
+	 		$("#register-form").find('.alert').hide();
 	 		$("#login").removeClass("active");
 	 		$("#register").addClass("active");
 	 		$(".Register").hide();
@@ -79,6 +87,7 @@
 	 		$(".Login").addClass("hidden");
 	 	});
 	 	$("#login").click(function() {
+	 		$("#login-form").find('.alert').hide();
 	 		$("#register").removeClass("active");
 	 		$("#login").addClass("active");
 	 		$(".Login").hide();
@@ -88,15 +97,16 @@
 
 	 	});
 
-
-	 	$("#register-form").on('submit', function(){
+	 	
+	 	$("#register-form").on('submit', function(e){
+	 		e.preventDefault();
 	 		$("#register-form").find('.alert').hide();
 	 		$.ajax({
 	 			url: 'process/page_Register.php',
 	 			method: 'post',
 	 			data: {
-	 				user_name: $(this).find('.username').val();
-	 				user_pass: $(this).find('.password').val();
+	 				user_name: $(this).find('.username').val(),
+	 				user_pass: $(this).find('.password').val()
 	 			},
 	 			dataType: 'json',
 	 			success: function(data) {
@@ -106,6 +116,29 @@
 	 					$("#register-form").find('.alert2').show();
 	 				} else {
 	 					$("#register-form").find('.alert3').show();
+	 				}
+	 			}
+	 		});
+	 	});
+	 	
+	 	$("#login-form").on('submit', function(e){
+	 		e.preventDefault();
+	 		$("#login-form").find('.alert').hide();
+	 		$.ajax({
+	 			url: 'process/page_Login.php',
+	 			method: 'post',
+	 			data: {
+	 				user_name: $(this).find('.username').val(),
+	 				user_pass: $(this).find('.password').val()
+	 			},
+	 			dataType: 'json',
+	 			success: function(data) {
+	 				if (data.success == 0) {
+	 					window.location.replace('index.php');
+	 				} else if (data.success == 1) {
+	 					$("#login-form").find('.alert1').show();
+	 				} else {
+	 					$("#login-form").find('.alert2').show();
 	 				}
 	 			}
 	 		});

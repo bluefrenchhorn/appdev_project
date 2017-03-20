@@ -1,4 +1,4 @@
-	<link rel="icon" href="paicon.ico">
+	<link rel="icon" href="/contra/pics/paicon.ico">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="css/background.css">
 	<link rel="stylesheet" type="text/css" href="css/divattb.css">
